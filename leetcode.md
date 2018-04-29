@@ -1014,26 +1014,9 @@ nums2 = [2,5,6],       n = 3
 >给定两个二叉树，编写一个函数来检验它们是否相同。
 如果两个树在结构上相同，并且节点具有相同的值，则认为它们是相同的。
 
-示例1
->输入:       1         1
-          / \       / \
-         2   3     2   3
-        [1,2,3],   [1,2,3]
-输出: true
+[![示例](https://i.loli.net/2018/04/29/5ae564bc6a702.png)](https://i.loli.net/2018/04/29/5ae564bc6a702.png)
 
-示例2
->输入:      1          1
-          /           \
-         2             2
-        [1,2],     [1,null,2]
-输出: false
-
-示例3
->输入:       1         1
-          / \       / \
-         2   1     1   2
-        [1,2,1],   [1,1,2]
-输出: false
+[![](https://i.loli.net/2018/04/29/5ae564dd7cff2.png)](https://i.loli.net/2018/04/29/5ae564dd7cff2.png)
 
 我...看了别人的。。。树要遍历每个节点，所以无论怎么写都离不开递归。
 ```python
@@ -1041,5 +1024,14 @@ nums2 = [2,5,6],       n = 3
             return p == q
         return p.val == q.val and self.isSameTree(p.right, q.right) and self.isSameTree(p.left, q.left)
 ```
+###101.对称二叉树
+描述
+[![](https://i.loli.net/2018/04/29/5ae5635849d4f.png)](https://i.loli.net/2018/04/29/5ae5635849d4f.png)
+我
+```python
+
+```
+
+
 
 
