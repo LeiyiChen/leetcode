@@ -1018,7 +1018,16 @@ nums2 = [2,5,6],       n = 3
 
 [![](https://i.loli.net/2018/04/29/5ae564dd7cff2.png)](https://i.loli.net/2018/04/29/5ae564dd7cff2.png)
 
-我...看了别人的。。。树要遍历每个节点，所以无论怎么写都离不开递归。
+树要遍历每个节点，所以无论怎么写都离不开递归。
+```python
+        if p == None or q == None:
+            return p == q
+        elif p.val == q.val:
+            return self.isSameTree(p.right, q.right) and self.isSameTree(p.left, q.left)
+        else:
+            return False
+```
+别人的。。。
 ```python
         if p == None or q == None:
             return p == q
@@ -1027,11 +1036,27 @@ nums2 = [2,5,6],       n = 3
 ### 101.对称二叉树
 描述
 [![](https://i.loli.net/2018/04/29/5ae5635849d4f.png)](https://i.loli.net/2018/04/29/5ae5635849d4f.png)
-我
+我。。。看了别人的跌跌爬爬写出来的。。。
 ```python
-
+    def isSymmetric(self, root):
+        """
+        :type root: TreeNode
+        :rtype: bool
+        """
+        def f(p, q):
+            if p == None:
+                return q == None
+            if q == None:
+                return p == None
+            if p.val == q.val:
+                return f(p.left, q.right) and f(p.right, q.left)
+            if p.val != q.val:
+                return False
+        if root == None:
+            return True
+        return f(root.left, root.right)
 ```
-
+关于二叉树的总结：对于树的操作，是必定要使用递归的方法的。对于求解树的任何问题，都先使用分治法，将树拆分为左子树和右子树（这里主要针对二叉树来说明），如果左子树和右子树都符合条件，则这颗树都满足条件。而左子树和右子树再拆分成左子树和右子树，进行递归。这里需要注意的是递归结束的条件，以及递归过程。
 
 
 
