@@ -1057,6 +1057,39 @@ nums2 = [2,5,6],       n = 3
         return f(root.left, root.right)
 ```
 关于二叉树的总结：对于树的操作，是必定要使用递归的方法的。对于求解树的任何问题，都先使用分治法，将树拆分为左子树和右子树（这里主要针对二叉树来说明），如果左子树和右子树都符合条件，则这颗树都满足条件。而左子树和右子树再拆分成左子树和右子树，进行递归。这里需要注意的是递归结束的条件，以及递归过程。
+### 104.二叉树的最大深度
+描述
+[![](https://i.loli.net/2018/04/30/5ae701053c2ad.png)](https://i.loli.net/2018/04/30/5ae701053c2ad.png)
+我
+```python
+        def depth(p):
+            if p == None:
+                return 1
+            else:
+                return 1 + max(depth(p.right), depth(q.left))
+        
+        if root == None:
+            return 0
+        else:
+            return max(depth(root.right), depth(root.left))
+```
+ok！二十分钟以内一次性通过搞定！！不妄研究了两天的树！！
+别人依然两行搞定
+```python
+        if root == None:
+            return 0
+        else:
+            return 1 + max(maxDepth(root.right), maxDepth(root.left))
+```
+### 107.二叉树的层次遍历 II
+描述
+[![](https://i.loli.net/2018/04/30/5ae708055ce4c.png)](https://i.loli.net/2018/04/30/5ae708055ce4c.png)
+我
+```python
+
+```
+
+
 
 
 
