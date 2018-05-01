@@ -1084,9 +1084,31 @@ ok！二十分钟以内一次性通过搞定！！不妄研究了两天的树！
 ### 107.二叉树的层次遍历 II
 描述
 [![](https://i.loli.net/2018/04/30/5ae708055ce4c.png)](https://i.loli.net/2018/04/30/5ae708055ce4c.png)
-我
+我又研究了一下树的四种遍历，不然之前学的全忘光了。温故而知新！
 ```python
-
+    if root is None:
+        return []
+    p = [root]
+    results = []
+    current_level_num = 1
+    next_level_num = 0
+    d = []
+    while p:
+        current = p.pop(0)
+        d.append(current.val)
+        current_level_num -= 1
+        if current.left != None:
+            p.append(current.left)
+            next_level_num += 1
+        if current.right != None:
+            p.append(current.right)
+            next_level_num += 1
+        if current_level_num == 0:
+            current_level_num = next_level_num
+            next_level_num = 0
+            results.append(d)
+            d = []
+    return results[::-1]
 ```
 
 
