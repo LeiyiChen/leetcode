@@ -1110,8 +1110,63 @@ ok！二十分钟以内一次性通过搞定！！不妄研究了两天的树！
             d = []
     return results[::-1]
 ```
+### 108.将有序数组转换为二叉搜索树
+描述：
+[![](https://i.loli.net/2018/05/02/5ae91c0b21a2f.png)](https://i.loli.net/2018/05/02/5ae91c0b21a2f.png)
+我
+```python
 
+```
 
+### 111.二叉树的最小深度
+描述
+[![](https://i.loli.net/2018/05/03/5aeb27b6c01bf.png)](https://i.loli.net/2018/05/03/5aeb27b6c01bf.png)
+我
+```python
+        if root is None:
+            return 0
+        p = [root]
+        current_level_num = 1
+        next_level_num = 0
+        i = 1
+        while p:
+            current = p.pop(0)
+            current_level_num-=1
+            if current.left is None and current.right is None:
+                return i
+            if current.left:
+                next_level_num+=1
+                p.append(current.left)
+            if current.right:
+                next_level_num+=1
+                p.append(current.right)
+            if current_level_num == 0:
+                i += 1
+                current_level_num = next_level_num
+                next_level_num = 0
+```
+我采用的方法是层次遍历，按层次打印结点的，将其稍做修改。用变量i记录当前层数，当遇到叶子结点时则返回当前层数。代码还可以进行优化。待我第二遍再来优化吧，现在需要加快进度。
+别人采用递归实现：
+```python
+    if root is None:
+        return 0
+    if root.left is None and root.right is None:
+        return 1
+    elif root.left is None:
+        return 1 + self.minDepth(root.right)
+    elif root.right is None:
+        return 1 + self.minDepth(root.left)
+    else:
+        return 1 + min([self.minDepth(root.left), self.minDepth(root.right)])
+```
+递归有以下几种情况：
+1.根节点为空，深度为0
+2.只有一个根节点。深度为1
+3.左右子树皆不空，则返回1+左右子树中最小的深度。
+4.左子树为空，则返回1+右子树深度。这里可能有点难以理解，可以想象成此时只有根节点a,以及其右子树b，此时最小深度为2。
+5.右子树为空，则返回1+左子树深度。同上分析。
+[![](https://i.loli.net/2018/05/04/5aec13e7bb9fd.png)](https://i.loli.net/2018/05/04/5aec13e7bb9fd.png)
 
+ps：我自己总结的，在使用递归的时候，将问题最简化。分析最简单的场景下，有几种输出情况，分析完以后代码基本完成。比如这一题，就可以考虑只有两层的情况，如上图。目前使用这个方法还算顺利，但实践次数还不足以证明这个方法的正确性。
 
 
