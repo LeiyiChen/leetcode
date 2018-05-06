@@ -1133,6 +1133,44 @@ class Solution:
 我忽略了题干的主要条件。数组nums是一个升序数组，所以根节点的位置一定是
 m = len(nums)//2 nums中索引值小于m的树都位于根节点的左子树上，而另一半位于根节点的右子树上。
 然后进行递归调用。
+### 110.平衡二叉树
+描述
+[![](https://i.loli.net/2018/05/06/5aeed3e9db4b0.png)](https://i.loli.net/2018/05/06/5aeed3e9db4b0.png)
+我，两个递归，效率不行。
+```python
+class Solution:
+    def isBalanced(self, root):
+        """
+        :type root: TreeNode
+        :rtype: bool
+        """
+        def Depth(root):
+            if root is None:
+                return 0
+            elif root.left i None and root.right is None:
+                return 1
+            else:
+                return 1 + max(Depth(root.left), Depth(root.right))
+
+        if root is None:
+            return True
+        if abs(Depth(root.left) - Depth(root,right)) > 1:
+            return False
+        else:
+            return isBalanced(root.left) and isBalanced(root.right)
+```
+我的这个版本运行速度太慢了。看看别人的，直接定义一个求高度的函数。若子树不平衡，则返回-1。
+```python
+        def height(node):
+            if not node:return 0
+            left = height(node.left)
+            right = height(node.right)
+            if left == -1 or right == -1 or abs(left-right) > 1:
+                return -1
+
+            return max(left,right) + 1
+        return height(root) != -1
+```
 
 ### 111.二叉树的最小深度
 描述
