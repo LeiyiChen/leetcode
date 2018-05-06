@@ -1135,6 +1135,7 @@ m = len(nums)//2 nums中索引值小于m的树都位于根节点的左子树上�
 然后进行递归调用。
 ### 110.平衡二叉树
 描述
+
 [![](https://i.loli.net/2018/05/06/5aeed3e9db4b0.png)](https://i.loli.net/2018/05/06/5aeed3e9db4b0.png)
 我，两个递归，效率不行。
 ```python
