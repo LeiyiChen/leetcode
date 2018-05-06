@@ -1115,8 +1115,24 @@ ok！二十分钟以内一次性通过搞定！！不妄研究了两天的树！
 [![](https://i.loli.net/2018/05/02/5ae91c0b21a2f.png)](https://i.loli.net/2018/05/02/5ae91c0b21a2f.png)
 我
 ```python
-
+class Solution:
+    def sortedArrayToBST(self, nums):
+        """
+        :type nums: List[int]
+        :rtype: TreeNode
+        """
+        if not nums:
+            return None
+        mid = len(nums)//2
+        root = TreeNode(nums(mid))
+        root.left = self.sortedArrayToBST(nums[:mid])
+        root.right = self.sortedArrayToBST(nums[mid+1:])
+        return root
 ```
+卡了我好几天，还特意去学习了二叉搜索树的实现。还有平衡二叉树的插入调整方法。学了半天不得其法。于是看了解答，心里一句mmp。菜鸡就是菜鸡啊。
+我忽略了题干的主要条件。数组nums是一个升序数组，所以根节点的位置一定是
+m = len(nums)//2 nums中索引值小于m的树都位于根节点的左子树上，而另一半位于根节点的右子树上。
+然后进行递归调用。
 
 ### 111.二叉树的最小深度
 描述
