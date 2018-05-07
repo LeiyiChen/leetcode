@@ -1223,6 +1223,43 @@ class Solution:
 5.右子树为空，则返回1+左子树深度。同上分析。
 [![](https://i.loli.net/2018/05/04/5aec13e7bb9fd.png)](https://i.loli.net/2018/05/04/5aec13e7bb9fd.png)
 
-ps：我自己总结的，在使用递归的时候，将问题最简化。分析最简单的场景下，有几种输出情况，分析完以后代码基本完成。比如这一题，就可以考虑只有两层的情况，如上图。目前使用这个方法还算顺利，但实践次数还不足以证明这个方法的正确性。
+### 112.路径总和
+描述
+
+[![](https://i.loli.net/2018/05/07/5af046091e8ce.png)](https://i.loli.net/2018/05/07/5af046091e8ce.png)
+
+我
+```python
+class Solution:
+    def hasPathSum(self, root, sum):
+        """
+        :type root: TreeNode
+        :type sum: int
+        :rtype: bool
+        """
+        if root is None:
+            return False
+        sum-=root.val
+        if sum == 0:
+            if root.left is None and root.right is None:
+                return True
+        return self.hasPathSum(root.left, sum) or self.hasPathSum(root.right, sum)
+```
+其实这个问题我没有完全分析清楚。。。但是代码通过了。。。尴尬。
+稍微优化
+```python
+class Solution:
+    def hasPathSum(self, root, sum):
+        """
+        :type root: TreeNode
+        :type sum: int
+        :rtype: bool
+        """
+        if root is None:
+            return False
+        if sum == root.val and root.left is None and root.right is None:
+            return True
+        return self.hasPathSum(root.left, sum) or self.hasPathSum(root.right, sum)
+```
 
 
