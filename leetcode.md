@@ -1261,5 +1261,37 @@ class Solution:
             return True
         return self.hasPathSum(root.left, sum) or self.hasPathSum(root.right, sum)
 ```
+### 118.杨辉三角
+描述
+>给定一个非负整数 numRows，生成杨辉三角的前 numRows 行。
+在杨辉三角中，每个数是它左上方和右上方的数的和。
 
+示例
+>输入: 5
+输出:
+[
+     [1],
+    [1,1],
+   [1,2,1],
+  [1,3,3,1],
+ [1,4,6,4,1]
+]
 
+我
+```python
+        if not numRows:
+            return []
+        p = [1]
+        r = [p]
+        i = 1
+        while i < numRows:
+            i+=1
+            s = [0] * i
+            p = [0] + p + [0]
+            for j in range(i):
+                s[j] = p[j] + p[j+1]
+            r.append(s)
+            p = s 
+        return r
+```
+通过了，终于暂时没有树的题了，松了一口气。大神们都用lambda以及map()做的。。。emmm明天来研究。
