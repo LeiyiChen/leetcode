@@ -1295,3 +1295,116 @@ class Solution:
         return r
 ```
 通过了，终于暂时没有树的题了，松了一口气。大神们都用lambda以及map()做的。。。emmm明天来研究。
+总结：
+1. lambda表达式的用法
++ lambda的主体是一个表达式
++ 例子：
+```python
+>>> f = lambda x,y: x+y
+>>> f(1,2)
+3
+```
+2. zip()函数用法
++ zip()是Python的一个内建函数，它接受一系列可迭代的对象作为参数，将对象中对应的元素打包成一个个tuple（元组），然后返回由这些tuples组成的list（列表）。若传入参数的长度不等，则返回list的长度和参数中长度最短的对象相同。利用*号操作符，可以将list unzip（解压）。
++ 例子：
+```python
+>>> a = [1,2,3]
+>>> b = [4,5,6]
+>>> c = [7,8,9]
+>>> d = [4,5]
+>>> list(zip(a,b,c))
+[(1, 4, 7), (2, 5, 8), (3, 6, 9)]
+>>> list(zip(a,d))
+[(1, 4), (2, 5)]
+```
+最常应用的地方是矩阵行列互换。
+```python
+>>> a = [[1,2,3],[4,5,6],[7,8,9]]
+>>> list(map(list, zip(*a)))
+[[1, 4, 7], [2, 5, 8], [3, 6, 9]]
+>>> 
+```
+
+3. map()
+格式：map(func,seq[,seq2...])
+map（）函数是将func作用于seq中的每一个元素，并用一个列表给出返回值。如果func为None，作用同
+zip()。(seq表示序列)
+例子：
++ 一个seq
+```python
+>>> list(map(lambda x:x%2, range(4)))
+[0, 1, 0, 1]
+```
+
++多个seq，一个返回值
+```python
+>>> list(map(lambda x,y: x+y,[1,2],[3,4]))
+[4, 6]
+```
++多个seq，多个返回值组成一个元组
+```python
+>>> list(map(lambda x,y: (x+y, x*y), [1,2,3],[4,5,6]))
+[(5, 4), (7, 10), (9, 18)]
+```
+
+4. reduce()
+reduce()函数在functools库中。
+格式：reduce(func,seq[,init])
+reduce()函数即为化简，过程：每次迭代，将上一次的迭代结果（第一次时为init的元素，如果没有init则为seq的第一个元素）与下一个元素一同执行一个二元的func函数。在reduce函数中，init是可选的，如果使用，则作为第一次迭代的第一个元素使用。
+reduce(func,[1,2,3]) = func(func(1,2),3)
+例子：阶乘
+```python
+>>> from functools import reduce
+>>> reduce(lambda x,y:x*y, [1,2,3,4,5])
+120
+```
+2倍阶乘，初始参数为2。
+```python
+>>> reduce(lambda x,y:x*y, [1,2,3,4,5],2)
+240
+```
+
+5.filter()函数
+filter()函数用于过滤序列。和map()类似，filter()也接收一个函数和一个序列。和map()不同的是，filter()把传入的函数依次作用于每个元素，然后根据返回值是True还是False决定保留还是丢弃该元素。
+例子：删掉偶数
+```python
+>>> list(filter(lambda x: x%2 == 1, [1,2,3,4,5]))
+[1, 3, 5]
+```
+
+好，回到正题。
+优化后的代码
+```python
+        r = [[1]]
+        for i in range(1,numRows):
+            r.append(list(map(lambda x,y:x+y, [0]+r[-1],r[-1]+[0])))
+        return r[:numRows]#这里太强了
+```
+### 119.杨辉三角形 II
+描述：
+>给定一个非负索引 k，其中 k ≤ 33，返回杨辉三角的第 k 行。
+
+示例：
+>输入: 3
+输出: [1,3,3,1]
+
+我
+```python
+class Solution:
+    def getRow(self, rowIndex):
+        """
+        :type rowIndex: int
+        :rtype: List[int]
+        """
+        p = [1]
+        if not rowIndex:
+            return p
+        for i in range(rowIndex):
+            s = list(map(lambda x,y:x+y, [0]+p,p+[0]))
+            p = s
+        return s
+```
+运行速度在中下水平。看看最快的。
+```python
+
+```
