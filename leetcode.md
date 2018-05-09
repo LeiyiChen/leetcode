@@ -1406,5 +1406,92 @@ class Solution:
 ```
 运行速度在中下水平。看看最快的。
 ```python
-
+class Solution:
+    def getRow(self, rowIndex):
+        """
+        :type rowIndex: int
+        :rtype: List[int]
+        """
+        p = [1]
+        if not rowIndex:
+            return p
+        for j in range(rowIndex):
+            p = [1] + [p[i]+p[i+1] for i in range(len(p)-1)] +[1]
+        return p
 ```
+### 121.买卖股票的最佳时机
+描述
+>给定一个数组，它的第 i 个元素是一支给定股票第 i 天的价格。
+如果你最多只允许完成一笔交易（即买入和卖出一支股票），设计一个算法来计算你所能获取的最大利润。
+注意你不能在买入股票前卖出股票。
+
+示例1
+>输入: [7,1,5,3,6,4]
+输出: 5
+解释: 在第 2 天（股票价格 = 1）的时候买入，在第 5 天（股票价格 = 6）的时候卖出，最大利润 = 6-1 = 5 。
+     注意利润不能是 7-1 = 6, 因为卖出价格需要大于买入价格。
+
+示例2
+>输入: [7,6,4,3,1]
+输出: 0
+解释: 在这种情况下, 没有交易完成, 所以最大利润为 0。
+
+我
+```python
+class Solution:
+    def maxProfit(self, prices):
+        """
+        :type prices: List[int]
+        :rtype: int
+        """
+        if not prices:
+            return 0
+        l = []
+        for i in range(len(prices)):
+            for j in range(i+1, len(prices)):
+                if prices[j] > prices[i]:
+                    l.append(prices[j]-prices[i])
+        if not l:
+            return 0
+        else:
+            return max(l)
+```
+果不其然，超出时间限制。两层循环
+然后修改了代码，表面上看只有一层循环，但事实上本质还是两层循环。虽然比第一版本的运行时间要快一点，但是依然超出时间限制。
+```python
+class Solution:
+    def maxProfit(self, prices):
+        """
+        :type prices: List[int]
+        :rtype: int
+        """
+        if not prices:
+            return 0
+        l = []
+        for i in range(len(prices)-1):
+            j = max(prices[i+1:])
+            if j > prices[i]:
+                l.append(j-prices[i])
+        if not l:
+            return 0
+        else:
+            return max(l)
+```
+看看别人的思路。在价格最低的时候买入，差价最大的时候卖出就解决了！没毛病这个方案，跟实际买卖很像，然而真的炒股的时候我们并不能预测每一天的价格。
+```python
+class Solution:
+    def maxProfit(self, prices):
+        """
+        :type prices: List[int]
+        :rtype: int
+        """
+        if len(prices) < 2:
+            return 0
+        profile = 0
+        minimum = prices[0]
+        for i in prices:
+            minimum = min(i, minimum)
+            profile = max(i - minimum, profile)
+        return profile
+```
+一次循环搞定查找最小值和最大差值。
