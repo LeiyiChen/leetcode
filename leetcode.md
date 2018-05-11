@@ -506,7 +506,7 @@ class Solution:
 1）最大子序列在左半部分
 2）最大子序列在右半部分
 3）最大子序列跨越左右部分。
-前两种情况通过递归求解，第三种情况可以通过。
+前两种情况通过递归求解。
 分治法代码大概如下，emmm。。。目前还没有完全理解。分析可参考https://blog.csdn.net/samjustin1/article/details/52043173
 ```python
 
@@ -544,7 +544,7 @@ def max3(x,y,z):
         while i < l:
             sum+=nums[i]
             if sum > MaxSum:
-                    MaxSum = sum
+                MaxSum = sum
             if sum < 0:
                 sum = 0
             i+=1
@@ -1664,4 +1664,103 @@ class Solution:
             res^=i
         return res
 ```
+### 141.环形链表
+描述
+>给定一个链表，判断链表中是否有环。
+进阶：
+你能否不使用额外空间解决此题？
 
+我...遍历了以后超出时间限制，于是看大家总结的方法。一个就是设置两个指针slow和fast，一个步长为1，一个步长为2进行遍历。如果有环，则slow和fast总会在某一点相遇。如果没有环，则fast会先为空，或者fast.next为空。
+```python
+# Definition for singly-linked list.
+# class ListNode(object):
+#     def __init__(self, x):
+#         self.val = x
+#         self.next = None
+
+class Solution(object):
+    def hasCycle(self, head):
+        """
+        :type head: ListNode
+        :rtype: bool
+        """
+        if head is None or head.next is None or head.next.next is None:
+            return False
+        slow = head.next
+        fast = head.next.next
+        while slow != fast and fast is not None and fast.next is not None:
+            slow = slow.next
+            fast = fast.next.next
+        if fast == slow:
+            return True
+        else:
+            return False
+```
+通过了呢，但是我觉得我的代码不够优雅，还可以再进行简化。
+关于环形链表的相关问题可以查看https://blog.csdn.net/happywq2009/article/details/44313155
+```python
+class Solution(object):
+    def hasCycle(self, head):
+        """
+        :type head: ListNode
+        :rtype: bool
+        """
+        fast = slow = head
+        while fast and fast.next:
+            fast = fast.next.next
+            slow = slow.next
+            if slow == fast:
+                return True
+        return False
+```
+关于环形链表问题的[总结（from Rotten_Pencil）](https://www.jianshu.com/p/1c59b153308c)
+1.快慢指针一直到相遇时的循环次数等于环的长度。（可推导）
+Case1:一个完美的环状链表，即链表头尾相连
+>一个环形链表：{A，B，C，A，B，C，……}
+其上存在两个指针，A指针移动速度是B指针的两倍。
+A，B同时从节点1出发，所经过的节点如下：
+快指针A：A->C->B->A
+慢指针B：A->B->C->A
+A、B指针在节点A第一次相遇，循环次数为3，而环的程度正好也为3。那这个是不是巧合呢？
+首先我们要理解的是循环的次数代表的是什么。
+1. 每次循环，对于B这个慢指针来说，意味着走了一个单位长度。
+2. 而对于A来说，走了两个单位长度。
+3. 那么二者第一次相遇必然是在A走了2圈，B走了1圈的时候。
+4. 假如A的速度是B的3倍，那么二者第一次相遇是在A走了3圈，B走了1圈的时候。
+5. 同理A是B的5倍速度，相遇时A走了5圈，B走了1圈
+...
+n. A的速度是B的n倍，相遇时A走了n圈，B走了1圈
+从上面的观察我们可以发现，无论A的速度是B的几倍，两者第一次相遇必然是在B走了1圈时。
+因为B的速度代表的是链表基本的长度单位，即从一个节点移动到下一个节点的距离。
+同时在链表中，每个节点与节点之间这个距离是不变的。
+当循环结束时，B走了1圈，正好是环的长度。而B每次移动一个单位距离，因此环的长度等于循环次数。
+
+Case2：不完美的环状链表，即，链表中某一中间节点与尾部相连
+![不完美的环形链表](https://upload-images.jianshu.io/upload_images/2206027-675224c588ace55d.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/397)
+
+>一个环形链表（如图所示）：{D，E，A，B，C，A，B，C，……}
+其上存在两个指针，A指针移动速度是B指针的两倍。
+A，B同时从节点1出发，所经过的节点如下：
+快指针A：D->A->C->B
+慢指针B：D->E->A->B
+根据上图，我们可以计算出A、B行走的距离：
+A = d+e+a+b+c+a
+B = d+e+a
+因为A的速度是B的2倍，那么A行走的距离也因该是B的2倍：
+d+e+a+b+c+a = 2(d+e+a)
+      a+b+c = d+e+a
+从上图可以看出，a+b+c正好是环的长度，而d+e+a则是B行进的距离。
+又知，每次循环B移动一个单位距离，因此在不完美的环状表中，循环次数亦是等于环的长度。
+
+2.快慢指针相遇点到环入口的距离 = 链表起始点到环入口的距离。（可推导）
+>根据上文公式，我们可以继续推导，即：
+a+b+c = d+e+a
+  b+c = d+e
+b+c是相遇点到环入口的距离
+d+e是链表起点到环入口的距离
+
+[相关问题](https://blog.csdn.net/happywq2009/article/details/44313155)：
+- 判断是否为环形链表
+- 若为环形链表，求环入口点
+- 求环的长度
+- 判断两个链表是不是相交（思路：如果两个链表相交，那么这两个链表的尾节点一定相同。直接判断尾节点是否相同即可。这里把这道题放在环形链表，因为环形链表可以拆成Y字的两个链表。）
