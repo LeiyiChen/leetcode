@@ -1589,9 +1589,79 @@ profit=（3-1)+(5-3)+(6-2)+(3-1)=3-1+5-3+(6-2)+(3-1)=(5-1)+(6-2)+(3-1)
         s = s.upper()
         return s[::] == s[::-1]
 ```
-通过了，不过借助了外力。还是查询了如何判断字符串中的字母。使用str.isalpha()方法判断，而数字则使用ASCII码判断。然后前天总结的filter()函数派上用场了哈哈哈。对于字符串转列表，列表转字符串的用法还需要再总结，每次使用都要现查，浪费时间。题目中还需要将字符统一转化为大写或小写。
+通过了，不过借助了外力。还是查询了如何判断字符串中的字母。使用str.isalpha()方法判断，而数字则使用ASCII码判断(其实这里可以用str.isdigit()来判断数字)python真的太高级。然后前天总结的filter()函数派上用场了哈哈哈。对于字符串转列表，列表转字符串的用法还需要再总结，每次使用都要现查，浪费时间。题目中还需要将字符统一转化为大写或小写。
 别人的，两句话搞定。。。这大概就是刷题的意义吧。开开心心地终于通过了，然后发现别人只用两三行代码就解决了问题，啊哈哈哈哈，酸爽。
 ```python
         s = list(filter(str.isalnum, s.lower()))
         return True if s == s[::-1] else False
 ```
+总结：str.isalnum()方法检测字符串是否由字母和数字组成。
+字符串转列表：
+str.split('')
+列表转字符串：
+s = ''.join(l)
+### 136.只出现一次的数字
+描述
+>给定一个非空整数数组，除了某个元素只出现一次以外，其余每个元素均出现两次。找出那个只出现了一次的元素。
+说明：
+你的算法应该具有线性时间复杂度。 你可以不使用额外空间来实现吗？
+
+>示例 1:
+输入: [2,2,1]
+输出: 1
+
+>示例 2:
+输入: [4,1,2,1,2]
+输出: 4
+
+我v1.0
+```python
+class Solution:
+    def singleNumber(self, nums):
+        """
+        :type nums: List[int]
+        :rtype: int
+        """
+        s = []
+        for i in nums:
+            if i not in s:
+                s.append(i)
+            elif i in s:
+                s.remove(i)
+        return s[0]
+```
+很好，超出时间限制。早已在掌握之中。
+下面的v2.0版本是为了缩减代码，但效率上没有任何改善。
+```Python
+        for i in nums:
+            if nums.count(i) == 1:
+                return i
+```
+看了别人的代码，发现我第一个版本的思路还不错，只是将列表s换成字典会好很多。
+```python
+        s = {}
+        for i in nums:
+            if i in s.keys():
+                s.pop(i)
+            else:
+                s[i]=1
+        return list(s.keys())[0]
+```
+很好通过了，但是执行时间还有可提高空间下面看一看终极boss。
+高级用法异或^
+0异或任何数不变，任何数与自己异或为0。a⊕b⊕a=b。异或满足加法结合律和交换律。
+666异或操作真的很强，我的提交执行用时战胜了95.75%的Python3提交记录。
+v3.0
+```python
+class Solution:
+    def singleNumber(self, nums):
+        """
+        :type nums: List[int]
+        :rtype: int
+        """
+        res = 0
+        for i in nums:
+            res^=i
+        return res
+```
+
