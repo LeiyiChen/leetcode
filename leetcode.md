@@ -1697,7 +1697,7 @@ class Solution(object):
             return False
 ```
 通过了呢，但是我觉得我的代码不够优雅，还可以再进行简化。
-关于环形链表的相关问题可以查看https://blog.csdn.net/happywq2009/article/details/44313155
+关于环形链表的相关问题可以[查看](https://blog.csdn.net/happywq2009/article/details/44313155)
 ```python
 class Solution(object):
     def hasCycle(self, head):
@@ -1764,3 +1764,43 @@ d+e是链表起点到环入口的距离
 - 若为环形链表，求环入口点
 - 求环的长度
 - 判断两个链表是不是相交（思路：如果两个链表相交，那么这两个链表的尾节点一定相同。直接判断尾节点是否相同即可。这里把这道题放在环形链表，因为环形链表可以拆成Y字的两个链表。）
+
+### 142.环形链表 II
+描述(虽然这是中等难度的题，不过我觉得有必要跟上一题放在一起。我可以考虑按类型来做题，不再按难度来做题了)：
+>
+给定一个链表，返回链表开始入环的第一个节点。 如果链表无环，则返回 null。
+说明：不允许修改给定的链表。
+进阶：
+你是否可以不用额外空间解决此题？
+
+我
+```python
+# Definition for singly-linked list.
+# class ListNode(object):
+#     def __init__(self, x):
+#         self.val = x
+#         self.next = None
+
+class Solution(object):
+    def detectCycle(self, head):
+        """
+        :type head: ListNode
+        :rtype: ListNode
+        """
+        if head is None or head.next is None:
+            return None
+        fast = head
+        slow = head
+        while fast.next and fast.next.next:
+            slow = slow.next
+            i+=1
+            fast = fast.next.next
+            if slow == fast:
+                p = head
+                while slow != p:
+                    p = p.next
+                    slow = slow.next
+                return p
+        return None
+```
+思路就是上面总结的：相遇点到环入口点的距离=头节点到环入口点的距离
