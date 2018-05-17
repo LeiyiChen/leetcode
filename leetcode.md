@@ -1804,3 +1804,124 @@ class Solution(object):
         return None
 ```
 思路就是上面总结的：相遇点到环入口点的距离=头节点到环入口点的距离
+
+### 155.最小栈
+描述：
+>
+设计一个支持 push，pop，top 操作，并能在常数时间内检索到最小元素的栈。
+push(x) -- 将元素 x 推入栈中。
+pop() -- 删除栈顶的元素。
+top() -- 获取栈顶元素。
+getMin() -- 检索栈中的最小元素。
+
+示例
+>MinStack minStack = new MinStack();
+minStack.push(-2);
+minStack.push(0);
+minStack.push(-3);
+minStack.getMin();   --> 返回 -3.
+minStack.pop();
+minStack.top();      --> 返回 0.
+minStack.getMin();   --> 返回 -2.
+
+我(最近在忙项目的事，好久没刷题了，哈哈哈现在告一段落又开始刷题，一遍过真的爽嘻嘻)
+```python
+class MinStack(object):
+
+    def __init__(self):
+        """
+        initialize your data structure here.
+        """
+        self.l = []
+
+        
+    def push(self, x):
+        """
+        :type x: int
+        :rtype: void
+        """
+        if x is None:
+            pass
+        else:
+            self.l.append(x)
+        
+
+    def pop(self):
+        """
+        :rtype: void
+        """
+        if self.l is None:
+            return 'error'
+        else:
+            self.l.pop(-1)
+        
+
+    def top(self):
+        """
+        :rtype: int
+        """
+        if self.l is None:
+            return 'error'
+        else:
+            return self.l[-1]
+        
+
+    def getMin(self):
+        """
+        :rtype: int
+        """
+        if self.l is None:
+            return 'error'
+        else:
+            return min(self.l)
+```
+看看执行速度快的代码
+```python
+执行用时为 60 ms 的范例
+class MinStack(object):
+    def __init__(self):
+        """
+        initialize your data structure here.
+        """
+        self.stack = []
+        self.min = None
+
+    def push(self, x):
+        """
+        :type x: int
+        :rtype: void
+        """
+        self.stack.append(x)
+        if self.min == None or self.min > x:
+            self.min = x
+
+    def pop(self):
+        """
+        :rtype: void
+        """
+
+        popItem = self.stack.pop()
+        if len(self.stack) == 0:
+            self.min = None
+            return popItem
+
+        if popItem == self.min:
+            self.min = self.stack[0]
+            for i in self.stack:
+                if i < self.min:
+                    self.min = i
+        return popItem
+
+    def top(self):
+        """
+        :rtype: int
+        """
+        return self.stack[-1]
+
+    def getMin(self):
+        """
+        :rtype: int
+        """
+        return self.min
+```
+__init__()初始化的时候多定义了一个最小值self.min,在每次push和pop操作的时候就判断是否为最小值，保证self.min是最小的。这个运行起来比我用min()要快好多。也更能体现刷题的意义，2333.
