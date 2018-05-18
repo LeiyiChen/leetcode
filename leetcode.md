@@ -1925,3 +1925,143 @@ class MinStack(object):
         return self.min
 ```
 __init__()初始化的时候多定义了一个最小值self.min,在每次push和pop操作的时候就判断是否为最小值，保证self.min是最小的。这个运行起来比我用min()要快好多。也更能体现刷题的意义，2333.
+
+### 160.相交链表
+描述
+>[![](https://i.loli.net/2018/05/17/5afd9f8d120aa.png)](https://i.loli.net/2018/05/17/5afd9f8d120aa.png)
+
+2333这个题之前有总结到啊。
+思路是这样的（题目中假设没有环）：
+1.分别遍历两个链表，如果尾节点不同则不相交，返回None，如果尾节点相同则求相交结点。
+2.求相交结点的方法是，求出链表长度的差值，长链表先走差值大小步。然后两个链表一起往前走，若结点相同则第一个相交点。
+3.求链表的长度，在遍历的时候就计算，并将每个结点放在字典中。
+我
+```python
+# Definition for singly-linked list.
+# class ListNode(object):
+#     def __init__(self, x):
+#         self.val = x
+#         self.next = None
+
+class Solution(object):
+    def getIntersectionNode(self, headA, headB):
+        """
+        :type head1, head1: ListNode
+        :rtype: ListNode
+        """
+        a = headA
+        b = headB
+        i = 0
+        l = m =0
+        while a:
+            a = a.next
+            l += 1
+        while b:
+            b = b.next
+            m += 1
+        if a != b:
+            return None
+        a = headA
+        b = headB        
+        if l > m:
+            diff = l - m
+            while diff:
+                a = a.next
+                diff-=1
+        if l < m:
+            diff = m - l
+            while diff:
+                b = b.next
+                diff-=1
+        while a!=b:
+            a = a.next
+            b = b.next
+        return a
+```
+优化一下：上个版本的代码用了字典存每个结点，但最后判断的时候却不知道用，依然采用了a=a.next的方法访问下一个结点。所以以下代码将改为根据结点的顺序为键，查找字典里的结点，大大提高了运行速度。但这是使用空间来换时间的做法。
+优化
+```python
+class Solution(object):
+    def getIntersectionNode(self, headA, headB):
+        """
+        :type head1, head1: ListNode
+        :rtype: ListNode
+        """
+        a = headA
+        b = headB
+        da = {0:a}
+        db = {0:b}
+        i = 0
+        l = m =0
+        while a:
+            a = a.next
+            l += 1
+            da[l] = a
+        while b:
+            b = b.next
+            m += 1
+            db[m]  = b
+        if db[m] != da[l]:
+            return None  
+        i = 0
+        if l >= m:
+            diff = l - m 
+            while True:
+                if da[i]==db[diff]:
+                    return da[i]
+                diff+=1
+                i+=1
+        if l < m:
+            diff = m - l
+            while True:
+                if db[i] == da[diff]:
+                    return db[i]
+                diff+=1
+                i+=1
+```
+2333，别人的代码又少又快，这就是差距。简单的问题复杂化。
+```python
+class Solution(object):
+    def getIntersectionNode(self, headA, headB):
+        """
+        :type head1, head1: ListNode
+        :rtype: ListNode
+        """
+        p1 = headA
+        p2 = headB
+        while(p1 != p2):
+            p1 = headB if p1 == None else p1.next
+            p2 = headA if p2 == None else p2.next
+        return p1
+```
+再看看排第二的代码
+```python
+class Solution(object):
+    def getIntersectionNode(self, headA, headB):
+        """
+        :type head1, head1: ListNode
+        :rtype: ListNode
+        """
+        lenA, lenB = 0, 0
+        pA = headA
+        pB = headB
+        while pA:
+            pA = pA.next
+            lenA += 1
+        while pB:
+            pB = pB.next
+            lenB += 1
+        pA = headA
+        pB = headB
+        if lenA > lenB:
+            for i in range(lenA-lenB):
+                pA = pA.next
+        else:
+            for i in range(lenB-lenA):
+                pB = pB.next
+        while pA!=pB:
+            pA = pA.next
+            pB = pB.next
+        return pA
+```
+思路跟我的几乎一样，只是for循环替代了while。这真是能用for就别用while。也不是，leetcode相同的代码提交多次执行速度都不一样。。。不稳定，仅供参考。
