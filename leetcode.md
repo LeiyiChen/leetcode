@@ -2143,3 +2143,64 @@ class Solution(object):
         return None
 ```
 
+### 168.
+描述
+>给定一个正整数，返回它在 Excel 表中相对应的列名称。
+例如，
+    1 -> A
+    2 -> B
+    3 -> C
+    ...
+    26 -> Z
+    27 -> AA
+    28 -> AB 
+    ...
+示例
+>输入: 1
+输出: "A"
+
+>输入: 28
+输出: "AB"
+
+>输入: 701
+输出: "ZY"
+
+我
+```python
+class Solution(object):
+    def convertToTitle(self, n):
+        """
+        :type n: int
+        :rtype: str
+        """
+        d = {}
+        r = []
+        a = ''
+        for i in range(1,27):
+            d[i] = chr(64+i)
+        if n <= 26:
+            return d[n]
+        if n % 26 == 0:
+            n = n/26 - 1
+            a ='Z'
+        while n > 26:
+            s = n % 26
+            n = n // 26
+            r.append(s)
+        result = d[n]
+        for i in r[::-1]:
+            result+=d[i]
+        return result + a
+```
+
+别人。看了一下，大概只有我用上述方法。代码量太大啦。。。还是练不够题，套路还没明白。
+```python
+        res = ""
+        
+        while n >= 1:
+            n -= 1
+            res = chr(int(n%26) + ord("A")) + res
+            n = n / 26
+        return res
+```
+
