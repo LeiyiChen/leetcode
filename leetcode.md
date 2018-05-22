@@ -2143,7 +2143,7 @@ class Solution(object):
         return None
 ```
 
-### 168.
+### 168.Excel表列名称
 描述
 >给定一个正整数，返回它在 Excel 表中相对应的列名称。
 例如，
@@ -2192,15 +2192,131 @@ class Solution(object):
             result+=d[i]
         return result + a
 ```
-
-别人。看了一下，大概只有我用上述方法。代码量太大啦。。。还是练不够题，套路还没明白。
+通过了leetcode，但是自己测试，发现代码并不对。输入值为x乘以26，其中x-1可以被26整除时，我的程序就没法运行。hhh万万没想到居然贡献了一个测试用例。
+别人。将十进制转换为二十六进制，但是从1开始，所以需要减一个1。emmm...涉及到数学推导的我也理解很慢，需要请教一下别人加深理解。
 ```python
-        res = ""
-        
-        while n >= 1:
-            n -= 1
-            res = chr(int(n%26) + ord("A")) + res
-            n = n / 26
-        return res
+class Solution(object):
+    def convertToTitle(self, n):
+        """
+        :type n: int
+        :rtype: str
+        """
+        #需要注意26时：26%26为0 也就是0为A 所以使用n-1  A的ASCII码为65
+        result = ""
+        while n != 0:
+            result = chr((n-1)%26+65) + result
+            n = (n-1)/26
+        return result
 ```
+总结一下：
+字符与ASCII码的转换：
+- 字符转ASCII码 ord(str)，如ord('A')为65
+- ASCII码转字符 chr(int)，如chr(65)为'A'
+
+### 169.求众数
+描述
+>给定一个大小为 n 的数组，找到其中的众数。众数是指在数组中出现次数大于 ⌊ n/2 ⌋ 的元素。
+你可以假设数组是非空的，并且给定的数组总是存在众数。
+
+示例
+>输入: [3,2,3]
+输出: 3
+输入: [2,2,1,1,1,2,2]
+输出: 2
+
+我，题目要求输出的只是一个数，但其实众数不是唯一的，我觉得应该输出数组。。。。
+```python
+        d = {}
+        r = []
+        for i in range(len(nums)):
+            if nums[i] in d.keys():
+                d[nums[i]]+=1
+            else:
+                d[nums[i]] = 1
+        times = len(nums)//2
+        for key in d.keys():
+            if d[key] > times:
+                return key
+```
+
+大神一句话的事！省题很重要，题目中假设了每个数组都有众数。
+```python
+class Solution(object):
+    def majorityElement(self, num):
+        return sorted(num)[len(num)/2]
+```
+总结：求众数先排序，取中间值。
+还有一个版本，我觉得max()函数的使用值得借鉴,找出数组中值最大的那组数据。如果是max(dict)，只能找出键最大的那组数据，所以这个时候就得使用max()函数中的key。
+```python
+        num_dict = {}
+        for i in nums:
+            if i in num_dict:
+                num_dict[i] +=1
+            else:
+                num_dict[i] = 1
+        return max(num_dict.items(), key=lambda x: x[1])[0]
+```
+平时使用max/min()函数都是传入一组数，但其实完整的函数定义是
+max(iterable,key,default).s求迭代器的最大值，其中iterable 为迭代器，max会for i in … 遍历一遍这个迭代器，然后将迭代器的每一个返回值当做参数传给key=func 中的func(一般用lambda表达式定义) ，然后将func的执行结果传给key，然后以key为标准进行大小的判断。
+```python
+d1 = {'name': 'egon', 'price': 100}
+d2 = {'name': 'rdw', 'price': 666}
+d3 = {'name': 'zat', 'price': 1}
+l1 = [d1, d2, d3]
+a = max(l1, key=lambda x: x['name'])
+print(a)
+b = max(l1, key=lambda x: x['price'])
+print(b)
+```
+执行结果：
+{'name': 'zat', 'price': 1}
+{'name': 'rdw', 'price': 666}
+关于max()/min()函数的使用，这遍[博文](https://www.cnblogs.com/whatisfantasy/p/6273913.html)不错。
+啰嗦一句题外话：
+```
+>>> prices
+{'A': 123, 'B': 450.1, 'C': 12, 'E': 444}
+>>> list(zip(prices.values(),prices.keys()))
+[(123, 'A'), (450.1, 'B'), (12, 'C'), (444, 'E')]
+```
+
+
+### 171. Excel表列序号
+描述
+>给定一个Excel表格中的列名称，返回其相应的列序号。
+例如，
+    A -> 1
+    B -> 2
+    C -> 3
+    ...
+    Z -> 26
+    AA -> 27
+    AB -> 28 
+    ...
+
+示例
+>输入: "A"
+输出: 1
+输入: "AB"
+输出: 28
+输入: "ZY"
+输出: 701
+
+我
+```python
+class Solution(object):
+    def titleToNumber(self, s):
+        """
+        :type s: str
+        :rtype: int
+        """
+        num = 0
+        for i in range(len(s)-1,-1,-1):
+            num += (ord(s[i]) - 64) * 26**(len(s)-i-1)
+        return num
+```
+hhhhhhhhh这道题有了上次的基础，第一次提交执行用时战胜了100.00%的提交记录。完美。就是将二十六进制转换为十进制，初始值是1。这次终于可以不看别人的解答了！！！
+
+
+
 
