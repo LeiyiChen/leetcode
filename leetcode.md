@@ -181,6 +181,21 @@ if strs == []:
                 common.append(temp[i])
         return ''.join(common)
 ```
+二刷
+```python
+        if not strs:
+            return ''
+        a = list(map(len,strs))
+        temp = strs[a.index(min(a))]
+        r = ''
+        for i in range(min(a)):
+            for j in strs:
+                if j[i] != temp[i]:
+                    return r
+            r+=temp[i]
+        return r
+```
+
 别人
 ```python
         if not strs:
@@ -2428,7 +2443,7 @@ class Solution:
         l = list(bin(n))[2:]
         l = list(map(int,l))
         l.reverse()
-        l = list(map(str,l))
+        l = list(map(str,l))    
         l = ['0','b'] + l
         s = ''.join(l)
         return int(s,2)
@@ -2448,5 +2463,49 @@ class Solution:
         s = ''.join(l)
         return int(s,2)
 ```
-然后其实大家都使用的是移位运算来处理。这是一个坑，待填。
+二刷
+```python
+        b = list('{:032b}'.format(n))
+        for i in range(16):
+            b[i],b[31-i] = b[31-i],b[i]
+        r = int(''.join(b),2)
+        return r
+```
+然后其实大家都使用的是移位运算来处理。format和移位运算已做出总结。
+### 191.位1的个数
+描述：
+>编写一个函数，输入是一个无符号整数，返回其二进制表达式中数字位数为 ‘1’ 的个数（也被称为汉明重量）。
 
+示例
+>输入: 11
+输出: 3
+解释: 整数 11 的二进制表示为 00000000000000000000000000001011
+输入: 128
+输出: 1
+解释: 整数 128 的二进制表示为 00000000000000000000000010000000
+
+我
+```python
+class Solution(object):
+    def hammingWeight(self, n):
+        """
+        :type n: int
+        :rtype: int
+        """
+        r = 0
+        l = list(map(int,list('{:b}'.format(n))))
+        for i in l:
+            r += i
+        return r
+```
+第一
+```python
+class Solution(object):
+    def hammingWeight(self, n):
+        """
+        :type n: int
+        :rtype: int
+        """
+        n=bin(n)
+        return n.count('1')
+```
