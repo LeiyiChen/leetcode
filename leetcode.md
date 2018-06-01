@@ -2574,3 +2574,49 @@ class Solution(object):
         for i in nums: last, now = now, max(last + i, now)
         return now
 ```
+
+### 202.快乐数
+描述
+>编写一个算法来判断一个数是不是“快乐数”。
+一个“快乐数”定义为：对于一个正整数，每一次将该数替换为它每个位置上的数字的平方和，然后重复这个过程直到这个数变为 1，也可能是无限循环但始终变不到 1。如果可以变为 1，那么这个数就是快乐数。
+
+示例
+>输入: 19
+输出: true
+解释: 
+12 + 92 = 82
+82 + 22 = 68
+62 + 82 = 100
+12 + 02 + 02 = 1
+
+我
+题目中有说，结果有两种情况：
+1. 结果为1则为true;
+2. 结果无限循环，这就需要保存计算过的值，当然是使用散列表实现的字典。这里如果使用递归的话很难维护字典，所以最后改为递推。
+```python
+class Solution(object):
+    def isHappy(self, n):
+        """
+        :type n: int
+        :rtype: bool
+        """
+        d = {}
+        while True:
+            l = list(map(int,list(str(n))))
+            m = 0
+            for i in l:
+                m += i**2
+            if m in d:
+                print(d)
+                return False
+            if m == 1:
+                print(d)
+                return True
+            d[m] = m
+            n = m
+```
+上个版本中，取每个位置上的数时用了python的特有方法。但如果使用数学方法会跟高效。
+优化
+```python
+
+```
