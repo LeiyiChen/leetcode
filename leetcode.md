@@ -2618,5 +2618,41 @@ class Solution(object):
 上个版本中，取每个位置上的数时用了python的特有方法。但如果使用数学方法会跟高效。
 优化
 ```python
-
+        d = {}
+        while True:
+            m = 0
+            while n > 0:
+                m += (n%10)**2
+                n //= 10 
+            if m in d:
+                return False
+            if m == 1:
+                return True
+            d[m] = m
+            n = m
 ```
+但其实效果不是很明显，还可以更优化。看看别人的：
+```python
+class Solution(object):
+    def isHappy(self, n):
+        """
+        :type n: int
+        :rtype: bool
+        """
+        record = []
+        sq_sum = 0
+        se_n = n
+        
+        while se_n != 1:
+            sq_sum = 0
+            while se_n > 0:
+                sq_sum += (se_n % 10) * (se_n % 10)
+                se_n = se_n / 10
+            if sq_sum in record:
+                return False
+            record.append(sq_sum)
+            se_n = sq_sum
+            
+        return True
+```
+emmm...大概思路是一样的，但是逻辑判断顺序不一样，所以在时间上有区别。
