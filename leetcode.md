@@ -2656,3 +2656,66 @@ class Solution(object):
         return True
 ```
 emmm...大概思路是一样的，但是逻辑判断顺序不一样，所以在时间上有区别。
+### 203.删除链表中的节点
+描述
+>删除链表中等于给定值 val 的所有节点。
+
+示例
+>输入: 1->2->6->3->4->5->6, val = 6
+输出: 1->2->3->4->5
+
+我
+```python
+# Definition for singly-linked list.
+# class ListNode(object):
+#     def __init__(self, x):
+#         self.val = x
+#         self.next = None
+
+class Solution(object):
+    def removeElements(self, head, val):
+        """
+        :type head: ListNode
+        :type val: int
+        :rtype: ListNode
+        """
+        if head:
+            while head.val == val:
+                head = head.next
+                if head is None:
+                    return head
+            q = head
+            p = q.next
+            while p:
+                if p.val == val:
+                    q.next = p.next
+                else:
+                    q = q.next
+                p = p.next
+        return head
+```
+leetcode中所有涉及到链表的题，头节点都保存值，并不是我们通常认为的头节点不存储值，所以以上代码中while循环用来考虑第一个节点的值。但其实最好的办法是没有头节点我们给它创造一个头节点。
+```python
+        pre_node = ListNode(None)
+        pre_node.next = head
+        q = pre_node
+        p = q.next
+        while p:
+            if p.val == val:
+                q.next = p.next
+            else:
+                q = q.next
+            p = p.next
+        return pre_node.next
+```
+再次优化
+```python
+        pre_node = ListNode(None)
+        pre_node.next = head
+        q = pre_node
+        while q.next:
+            if q.next.val == val:
+                q.next = q.next.next
+            else:
+                q = q.next
+```
