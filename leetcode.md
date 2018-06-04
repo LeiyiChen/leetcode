@@ -2751,14 +2751,80 @@ leetcode中所有涉及到链表的题，头节点都保存值，并不是我们
 
 使用此方法以后太高级了！
 ```python
-        if n < 3:
-            return 0
-        primes = [True] * n
-        primes[0] = primes[1] = False
-        for i in range(2, int(n ** 0.5) + 1):
-            if primes[i]:
-                primes[i * i: n: i] = [False] * len(primes[i * i: n: i])
-        return sum(primes)
+def countPrime(n):
+    if n < 3:
+        return 0
+    prime = [1] * n
+    prime[0] = prime[1] = 0
+    for i in range(2, int(n**0.5) +1):
+        if prime[i] == 1:
+            prime[i*i:n:i] = [0]*len(prime[i*i:n:i])
+    return sum(prime)
 ```
-特别是这句：primes[i * i: n: i] = [False] * len(primes[i * i: n: i])
-够我理解好久了。
+题外话，Python即对象，无意中看到觉得挺有意思的，放在这里。
+#Python 列表操作 a[:10] = [x for x in range(100)] 实际上发生了什么？ 后面的 90 个元素怎么处理的？
+```
+>>> a = list() 
+>>> a = [chr(_) for _ in range(ord('a'), ord('z')+1)] 
+>>> a 
+['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', ' y', 'z'] 
+>>> a[:10] = [x for x in range(100)] 
+>>> a 
+[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 6 3, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z']
+```
+
+### 205.同构字符串
+描述
+>给定两个字符串 s 和 t，判断它们是否是同构的。
+如果 s 中的字符可以被替换得到 t ，那么这两个字符串是同构的。
+所有出现的字符都必须用另一个字符替换，同时保留字符的顺序。两个字符不能映射到同一个字符上，但字符可以映射自己本身。
+
+示例
+>输入: s = "egg", t = "add"
+输出: true
+输入: s = "foo", t = "bar"
+输出: false
+输入: s = "paper", t = "title"
+输出: true
+
+说明:
+你可以假设 s 和 t 具有相同的长度。
+
+分析一波：
+1）先判断两个字符串的格式匹不匹配，即是否同为'ABB'等格式，若格式不相同则返回False，否则进入第二步；
+2）判断是否存在不同字符映射到同一字符的情况，若存在，则False。这条判断通过字典来实现，其中键为被映射的字符。比如'eggdd'--->'addaa'为False。在判断的时候注意不能仅通过该键值是否存在，因为会有'paper'--->'title'的情况存在，因为'p'-->'t'存在多次映射，所以还需要判断dict[t[i]] == s[i] ?
+
+我
+```python
+class Solution:
+    def isIsomorphic(self, s, t):
+        """
+        :type s: str
+        :type t: str
+        :rtype: bool
+        """
+        l = len(s)
+        if l == 0 or l == 1:
+            return True
+        d = {t[0]:s[0]}
+        for i in range(1, l):
+            if s[i] == s[i-1]:
+                if t[i] == t[i-1]:
+                    continue
+                else:
+                    return False
+            else:
+                if t[i] in d:
+                    if d[t[i]] == s[i]:
+                        continue
+                    else:   
+                        return False
+                else:
+                    d[t[i]] = s[i]
+        return True
+```
+看看别人的提神醒脑：
+```python
+        return len(set(zip(s,t))) == len(set(s)) == len(set(t))
+```
+太高级，over!
