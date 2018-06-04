@@ -2828,3 +2828,42 @@ class Solution:
         return len(set(zip(s,t))) == len(set(s)) == len(set(t))
 ```
 太高级，over!
+
+### 290.单词模式
+顺便把相关的290给做了。
+描述
+>
+给定一种 pattern(模式) 和一个字符串 str ，判断 str 是否遵循相同的模式。
+这里的遵循指完全匹配，例如，pattern里的每个字母和字符串str中的每个非空单词之间存在着双向连接的对应模式。
+
+示例
+>输入: pattern = "abba", str = "dog cat cat dog"
+输出: true
+输入:pattern = "abba", str = "dog cat cat fish"
+输出: false
+输入: pattern = "aaaa", str = "dog cat cat dog"
+输出: false
+输入: pattern = "abba", str = "dog dog dog dog"
+输出: false
+
+说明
+>你可以假设 pattern 只包含小写字母， str 包含了由单个空格分隔的小写字母。  
+
+我
+```python
+class Solution:
+    def wordPattern(self, pattern, str):
+        """
+        :type pattern: str
+        :type str: str
+        :rtype: bool
+        """
+        l = str.split(' ')
+        if len(l) != len(pattern):
+            return False
+        return len(set(zip(pattern,l))) == len(set(pattern)) == len(set(l))
+```
+直接使用了上述的方法，只是这题需要注意的是题目并没有说pattern与str等长，所以要额外判断pattern与str中单词数是否相等。
+不然以下用例会出错输入: 
+pattern = "abba", str = "dog dog dog dog"
+输出: false
