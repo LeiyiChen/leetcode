@@ -2867,3 +2867,53 @@ class Solution:
 不然以下用例会出错输入: 
 pattern = "abba", str = "dog dog dog dog"
 输出: false
+
+### 206.反转链表
+描述
+>反转一个单链表
+
+示例
+>输入: 1->2->3->4->5->NULL
+输出: 5->4->3->2->1->NULL
+
+我
+```python
+class Solution:
+        def reverseList(self, head):
+        """
+        :type head: ListNode
+        :rtype: ListNode
+        """
+        if head is None or head.next is None:
+            return head
+        p = head
+        d = {}
+        i = 0
+        while p:
+            d[i] = p
+            p = p.next
+            i += 1
+        l = len(d)
+        for i in range(l-1,0,-1):
+            d[i].next = d[i-1]
+        d[0].next = None
+        return d[l-1]
+
+```
+
+另外一种解法
+```python
+        if head is None:
+            return None
+        cur = head
+        pre = None
+        nxt = cur.next
+        while nxt:
+            cur.next = pre
+            pre = cur
+            cur = nxt
+            nxt = nxt.next
+        cur.next = pre
+        head = cur
+        return head
+```
