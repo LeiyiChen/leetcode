@@ -2917,3 +2917,79 @@ class Solution:
         head = cur
         return head
 ```
+
+### 234.回文链表
+描述
+>请判断一个链表是否为回文链表
+
+示例
+>输入: 1->2
+输出: false
+
+输入: 1->2->2->1
+输出: true
+
+进阶：你能否用 O(n) 时间复杂度和 O(1) 空间复杂度解决此题？
+
+我
+```python
+class Solution:
+    def isPalindrome(self, head):
+        """
+        :type head: ListNode
+        :rtype: bool
+        """
+        if head is None or head.next is None:
+            return True
+        l = []
+        p = head
+        while p.next:
+            l.append(p.val)
+            p = p.next
+        l.append(p.val)
+        return l == l[::-1]
+```
+但是空间占用太大。另一种解法空间复杂度O(1)，那么可以设置快慢指针，当快指针走完时，慢指针刚好走到中点，随即原地将后半段反转。然后进行回文判断。
+参考https://www.cnblogs.com/grandyang/p/4635425.html
+```python
+# Definition for singly-linked list.
+# class ListNode:
+#     def __init__(self, x):
+#         self.val = x
+#         self.next = None
+
+class Solution:
+    def isPalindrome(self, head):
+        """
+        :type head: ListNode
+        :rtype: bool
+        """
+        if head is None or head.next is None:
+            return True
+        if head.next.next is None:
+            return head.val == head.next.val
+        fast = slow = q = head
+        while fast.next and fast.next.next:#这里快指针的判读条件跟判断环形有一点不同
+            fast = fast.next.next
+            slow = slow.next
+        def reverse_list(head):
+            if head is None:
+                return head
+            cur = head
+            pre = None
+            nxt = cur.next
+            while nxt:
+                cur.next = pre
+                pre = cur
+                cur = nxt
+                nxt = nxt.next
+            cur.next = pre
+            return cur
+        p = reverse_list(slow.next)
+        while p.next:
+            if p.val != q.val:
+                return False
+            p = p.next
+            q = q.next
+        return p.val == q.val
+```
