@@ -2993,3 +2993,139 @@ class Solution:
             q = q.next
         return p.val == q.val
 ```
+
+### 217.存在重复元素
+描述
+>给定一个整数数组，判断是否存在重复元素。
+如果任何值在数组中出现至少两次，函数返回 true。如果数组中每个元素都不相同，则返回 false。
+
+示例
+>输入: [1,2,3,1]
+输出: true
+输入: [1,2,3,4]
+输出: false
+输入: [1,1,1,3,3,4,3,2,4,2]
+输出: true
+
+我
+```python
+class Solution:
+    def containsDuplicate(self, nums):
+        """
+        :type nums: List[int]
+        :rtype: bool
+        """
+        if len(nums) == 0 or len(nums) == 1:
+            return False
+        d = {}
+        for i in nums:
+            if i in d:
+                return True
+            d[i] = 0
+        return False
+```
+别人的
+`   return len(nums) != len(set(nums))`
+set真是个好东西
+
+### 219.存在重复元素 II
+描述
+>给定一个整数数组和一个整数 k，判断数组中是否存在两个不同的索引 i 和 j，使得 nums [i] = nums [j]，并且 i 和 j 的差的绝对值最大为 k。
+
+示例
+>输入: nums = [1,2,3,1], k = 3
+输出: true
+输入: nums = [1,0,1,1], k = 1
+输出: true
+输入: nums = [1,2,3,1,2,3], k = 2
+输出: false
+
+我
+只要数组中存在两个不同的索引i、j(i < j)，且j-i<=k，则返回True，否则False。
+1.使用字典d来存储，以数组元素为键，索引为值，遍历数组。
+2.若nums[j]存在于字典中，则转入3，否则添加键值对d[nums[j]] = j。
+3.进行索引值判断，若索引差值绝对值大于k，将字典d[nums[j]] = j进行更新，然后继续遍历数组返回1。若索引差值绝对值小于k，则return True。
+4.return False。
+```python
+class Solution:
+    def containsNearbyDuplicate(self, nums, k):
+        """
+        :type nums: List[int]
+        :type k: int
+        :rtype: bool
+        """
+        d = {}
+        for i in range(len(nums)):
+            if nums[i] in d:
+                if -k <= i - d[nums[i]] <= k:
+                    return True
+                else:
+                    d[nums[i]] = i
+            d[nums[i]] = i
+        return False
+```
+
+### 220.存在重复元素 III
+就着把三题关联的给做了
+描述
+>给定一个整数数组，判断数组中是否有两个不同的索引 i 和 j，使得 nums [i] 和 nums [j]的差的绝对值最大为 t，并且 i 和 j 之间的差的绝对值最大为 ķ。
+
+示例
+>输入: nums = [1,2,3,1], k = 3, t = 0
+输出: true
+输入: nums = [1,0,1,1], k = 1, t = 2
+输出: true
+输入: nums = [1,5,9,1,5,9], k = 2, t = 3
+输出: false
+
+我
+```python
+class Solution:
+    def containsNearbyAlmostDuplicate(self, nums, k, t):
+        """
+        :type nums: List[int]
+        :type k: int
+        :type t: int
+        :rtype: bool
+        """
+        if len(nums) == 0 or t < 0:
+            return False
+        d = {nums[0]: 0}
+        for i in range(1, len(nums)):
+            if nums[i] in d:
+                if abs(i-d[nums[i]]) <= k:
+                    return True
+                else:
+                    d[nums[i]] = i
+                    continue
+            l = sorted(d.keys())[::-1]
+            j = 0
+            while j < len(l):
+                if abs(nums[i] - l[j]) <= t:
+                    if -k <= i - d[l[j]] <= k:
+                        return True
+                j+=1
+            d[nums[i]] = i
+        return False
+```
+疯狂改代码，最后还是超出时间限制，看看别人的
+思路：因为没有重复，所以不能用hash。坐标之差在一个范围内，我们可以每次只在这个范围内寻找数，比如：从左往右移动，当长度大于k，那么就把搜索区间的最左边删除； 
+```python
+        lenth = len(nums)
+        a = set()
+        for i in range(lenth):
+            if t==0:
+                if nums[i] in a:
+                    return True
+            else:
+                for atem in a:
+                    if abs(nums[i]-atem)<=t:
+                        return True
+            a.add(nums[i])
+            if len(a) == k+1:
+                a.remove(nums[i-k])
+        return False
+```
+
+
+
