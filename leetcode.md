@@ -3194,4 +3194,31 @@ class MyStack:
             return False
 ```
 
+### 226.翻转二叉树
+描述
+>翻转一棵二叉树。
 
+示例
+![](https://i.loli.net/2018/06/09/5b1be3278c604.png)
+
+我
+```python
+# Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, x):
+#         self.val = x
+#         self.left = None
+#         self.right = None
+
+class Solution:
+    def invertTree(self, root):
+        """
+        :type root: TreeNode
+        :rtype: TreeNode
+        """
+        if root is None:
+            return root
+        else:
+            root.right, root.left = self.invertTree(root.left), self.invertTree(root.right)
+            return root
+```
