@@ -3222,3 +3222,43 @@ class Solution:
             root.right, root.left = self.invertTree(root.left), self.invertTree(root.right)
             return root
 ```
+
+### 231.2的幂
+描述
+>给定一个整数，编写一个函数来判断它是否是 2 的幂次方。
+
+示例
+
+输入: 1
+输出: true
+解释: $2^0$ = 1
+
+输入: 16
+输出: true
+解释:  $2^4$ = 16
+
+输入: 218
+输出: false
+
+思考：
+这道题的第一反应是sqrt()函数，但要使用该函数的话需要导入math包，这种做法并不合适刷题。然后就开始思考sqrt()函数是怎么实现的(最近开始好奇python源码了2333)，再读一遍题，只要求我们求是不是2的幂，如果考虑sqrt()函数，就把这道题扩大化了，太复杂了。那就来思考一下求是不是2的幂，为什么非要求2呢，不是3，4，5其它数字呢。灵光一现！二进制移位运算啊，之前有总结移位运算的运用里面就有介绍该方法！学习在于总结没毛病。
+我
+```python
+class Solution:
+    def isPowerOfTwo(self, n):
+        """
+        :type n: int
+        :rtype: bool
+        """
+        if n <= 0:
+            return False
+        else:
+            return bin(n).count('1') == 1
+```
+看一哈别人的
+```python
+        if n < 1:
+            return False
+        return not(n & (n-1))
+```
+太高级了!
