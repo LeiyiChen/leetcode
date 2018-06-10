@@ -3261,4 +3261,85 @@ class Solution:
             return False
         return not(n & (n-1))
 ```
-太高级了!
+太高级了!用数学知识分析一波：假如n为2的次幂，那么n的二进制必定首位为1，其他位为0。而n-1的二进制必定首位为0，其他位为1。所以假如n为2的次幂，则n&(n-1)为0。假如n不是2的次幂，那么二进制数中至少有两个1，而n-1的二进制数只是在n的基础上减一个1.改变末尾的数，相与的结果必定大于0.因此最后用 not(n&(n-1))判断。emmm，后面的解释有点太牵强了，不够严谨，大家看看就行。
+
+
+###232.用栈实现队列
+描述
+>使用栈实现队列的下列操作：
++ push(x) -- 将一个元素放入队列的尾部。
++ pop() -- 从队列首部移除元素。
++ peek() -- 返回队列首部的元素。
++ empty() -- 返回队列是否为空。
+
+示例
+>MyQueue queue = new MyQueue();
+queue.push(1);
+queue.push(2);  
+queue.peek();  // 返回 1
+queue.pop();   // 返回 1
+queue.empty(); // 返回 false
+
+说明
+>+ 你只能使用标准的栈操作 -- 也就是只有 push to top, peek/pop from top, size, 和 is empty 操作是合法的。
++ 你所使用的语言也许不支持栈。你可以使用list或者deque（双端队列）来模拟一个栈，只要是标准的栈操作即可。
++ 假设所有操作都是有效的 （例如，一个空的队列不会调用 pop 或者 peek 操作）。
+
+我
+```python
+from collections import deque
+class MyQueue:
+    def __init__(self):
+        """
+        Initialize your data structure here.
+        """
+        self.Myqueue = deque()
+        
+
+    def push(self, x):
+        """
+        Push element x to the back of queue.
+        :type x: int
+        :rtype: void
+        """
+        self.Myqueue.append(x)
+        
+
+    def pop(self):
+        """
+        Removes the element from in front of queue and returns that element.
+        :rtype: int
+        """
+        if len(self.Myqueue) > 0:
+            return self.Myqueue.popleft()
+        else:
+            return None
+
+
+    def peek(self):
+        """
+        Get the front element.
+        :rtype: int
+        """
+        if len(self.Myqueue) > 0:
+            return self.Myqueue[0]
+        else:
+            return None
+        
+
+    def empty(self):
+        """
+        Returns whether the queue is empty.
+        :rtype: bool
+        """
+        return len(self.Myqueue) == 0
+
+
+# Your MyQueue object will be instantiated and called as such:
+# obj = MyQueue()
+# obj.push(x)
+# param_2 = obj.pop()
+# param_3 = obj.peek()
+# param_4 = obj.empty()
+```
+只是为了秀一下前几天学的collections模块的双端队列deque。其实这题用list就够了。
