@@ -3482,3 +3482,81 @@ class Solution:
 return set(s) == set(t) and all(s.count(i) == t.count(i) for i in set(s))
 ```
 
+### 257.二叉树的所有路径
+描述
+>给定一个二叉树，返回所有从根节点到叶子节点的路径。
+
+说明：叶子节点是指没有子节点的节点。
+
+示例
+![](https://i.loli.net/2018/06/11/5b1e146d38576.png)
+
+[参考1](https://www.jianshu.com/p/1077384752a1)
+[参考2](https://blog.csdn.net/lulubaby_/article/details/78696270)
+从根节点出发找叶子，找到叶子之后，所有这条“找寻之路”上的所有节点构成了我们要打印出来的一条路径。所以，我们需要建立一个全局变量path，存储未到达当前节点时扫描过的路径中有哪些节点，作为从当前节点起，往叶子遍历所经过的路径的前缀。同理，最后的结果列表也是一个全局变量了。 
+所以，当题目中给出的函数形参只有一个root时，我们就需要再设定一个辅助函数，包含刚才说的path和result，让他们两个成为全局变量。 
+总结一下思路： 
+1. 建立一个字符串变量path和结果列表result，初始化为空 
+2. 从根节点开始访问，之后访问其左子树，再访问其右子树 
+3. 每访问一个节点，将节点的值加入path，例如，访问完根节点后，path = “1 ->”，并将这里的path作为新的变量加入左右子树的遍历函数 
+4. 递归“触底”的条件：访问的节点为空
+思路：
+二叉树遍历问题
+如果当前节点的左儿子和右儿子都为None => 说明当前节点为一个根节点，输出一条路径
+如果当前节点有左儿子，带着path向左进行。如果有右儿子，带着path向右进行
+
+我
+```python
+# Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, x):
+#         self.val = x
+#         self.left = None
+#         self.right = None
+
+class Solution:
+    def binaryTreePaths(self, root):
+        """
+        :type root: TreeNode
+        :rtype: List[str]
+        """
+        def helper(root,path,res):
+            if root.left is None and root.right is None:
+                res.append(path+str(root.val))
+                return 
+            if root.left:
+                helper(root.left, path + str(root.val)+'->', res)
+            if root.right:
+                helper(root.right, path + str(root.val)+'->', res)
+
+        if root is None:
+            return []
+        l = []
+        self.helper(root, '', l)
+        return l
+```
+
+别人
+```python
+class Solution:
+    def binaryTreePaths(self, root):
+        """
+        :type root: TreeNode
+        :rtype: List[str]
+        """
+        if not root:
+            return []
+        res, stack = [], [(root, "")]
+        while stack:
+            node, ls = stack.pop()
+            if not node.left and not node.right:
+                res.append(ls + str(node.val))
+                
+            if node.left:
+                stack.append((node.left, ls + str(node.val) + "->"))
+                
+            if node.right:
+                stack.append((node.right, ls + str(node.val) + "->"))
+                
+        return res
+```
