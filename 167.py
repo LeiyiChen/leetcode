@@ -15,6 +15,3 @@ class Solution(object):
         	s.append(target-numbers[i])
         return None
 
-if __name__=="__main__":
-	s = Solution()
-	print(s.twoSum([1,7,11,15],9))

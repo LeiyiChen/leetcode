@@ -24,8 +24,6 @@ class Solution:
         		else:
         			d[t[i]] = s[i]
         return True
-s = Solution()
-print(s.isIsomorphic('paper','title'))
 
 
 
