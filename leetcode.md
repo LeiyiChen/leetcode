@@ -3733,3 +3733,51 @@ class Solution:
                 t3 += 1
         return res[-1]
 ```
+
+### 268.缺失数字
+描述
+>给定一个包含 0, 1, 2, ..., n 中 n 个数的序列，找出 0 .. n 中没有出现在序列中的那个数。
+
+示例
+>输入: [3,0,1]
+输出: 2
+输入: [9,6,4,2,3,5,7,0,1]
+输出: 8
+
+说明:
+你的算法应具有线性时间复杂度。你能否仅使用额外常数空间来实现?
+
+我
+```python
+class Solution:
+    def missingNumber(self, nums):
+        """
+        :type nums: List[int]
+        :rtype: int
+        """
+        i = 0
+        nums.sort()
+        for item in nums:
+            if item - i != 0:
+                return i
+            else:
+                i += 1
+        return i
+```
+虽然代码看上去满足了说明里的要求，然而我使用了列表的sort()方法。。。
+
+看看别人的数学方法就可以解决，数学真是一门好学科。
+思路：nums相当于一个等差数列减去某一个数。所以用该等差数列的和减去nums的和即为所求。等差数列求和还记得吗。。。。。前n项和公式为：Sn=n*a1+n(n-1)d/2或Sn=n(a1+an)/2。
+```python
+        return(int(len(nums)*(len(nums)+1)/2)-sum(nums))
+```
+另外一种使用枚举，这个思路比较新颖。
+```python
+        nums.sort()
+
+        for key, value in enumerate(nums):
+            if key != value:
+                return key
+        else:
+            return key + 1
+```
