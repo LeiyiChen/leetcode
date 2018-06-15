@@ -3958,3 +3958,44 @@ class NumArray:
 _var ；变量名前一个下划线来定义，此变量为保护成员protected，只有类及其子类可以访问。此变量不能通过from XXX import xxx 导入
 __var;变量名前两个下划线来定义，此变量为私有private，只允许类本身访问，连子类都不可以访问。
 
+### 326.3的幂
+描述
+>给定一个整数，写一个函数来判断它是否是 3 的幂次方。
+
+示例
+>输入: 27
+输出: true
+输入: 0
+输出: false
+输入: 9
+输出: true
+输入: 45
+输出: false
+
+进阶
+>你能不使用循环或者递归来完成本题吗？
+
+对不起，我还是使用了循环。
+```python
+class Solution:
+    def isPowerOfThree(self, n):
+        """
+        :type n: int
+        :rtype: bool
+        """
+        while n > 1 :
+            l = list(map(int, str(n)))
+            if sum(l) % 3 == 0:
+                n = n // 3
+            else:
+                return False
+        if n <= 0:
+            return False
+        return True
+```
+别人的
+```python
+        return n > 0 and 1162261467 % n ==0
+```
+由于输入是int，正数范围是0-$2^31，在此范围中允许的最大的3的次方数为319=1162261467，那么我们只要看这个数能否被n整除即可。
+
