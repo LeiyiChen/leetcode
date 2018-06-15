@@ -9,18 +9,16 @@ class Solution:
         k = 0
         for i in range(len(nums)):
         	if nums[i-k] == 0:
-        		del nums[i]
+        		del nums[i-k]
         		nums.append(0)
         		k += 1
         '''
         #second solution
         '''
-        k = 0
-        for i in range(len(nums)):
-        	if nums[i-k] == 0:
-        		del nums[i]
-        		nums.append(0)
-        		k += 1
+        n = nums.count(0)
+        for i in range(n):
+            nums.remove(0)
+        nums.extend([0]*n)
         '''
         # third solution
         j = 0

@@ -3849,11 +3849,12 @@ class Solution:
         k = 0
         for i in range(len(nums)):
             if nums[i-k] == 0:
-                del nums[i]
+                del nums[i-k]
                 nums.append(0)
                 k += 1
 ```
-思路2
+变量k用来保存当前遍历值之前原nums有多少个零。为了配合del。
+思路2,类似于移除元素的双指针法，只不过反过来；快指针遍历，遇到0不动，遇到非0，则和慢指针交换，慢指针+1。
 ```python
         j = 0
         for i in range(len(nums)):
@@ -3861,4 +3862,99 @@ class Solution:
                 nums[j], nums[i] = nums[i], nums[j]
                 j += 1
 ```
-变量j用来保存已遍历过部位0的值。
+变量j用来保存当前nums已遍历过不位0的个数。
+
+### 292.Nim游戏
+描述
+>你和你的朋友，两个人一起玩 Nim游戏：桌子上有一堆石头，每次你们轮流拿掉 1 - 3 块石头。 拿掉最后一块石头的人就是获胜者。你作为先手。
+你们是聪明人，每一步都是最优解。 编写一个函数，来判断你是否可以在给定石头数量的情况下赢得游戏。
+
+示例
+>输入: 4
+输出: false 
+解释: 如果堆中有 4 块石头，那么你永远不会赢得比赛；
+     因为无论你拿走 1 块、2 块 还是 3 块石头，最后一块石头总是会被你的朋友拿走。
+
+[思路](https://www.jianshu.com/p/5f1c1f583e06)
+这个是个数学问题，赢的要点就是，在你的对手最后一次拿的时候，石头要是4个， 这时无论他拿1、2、3个，你都有石头拿。要保证这一点，你需要保证每次你拿完时石头的个数是4的倍数。那就意味着一开始石头的数目不是4的倍数。
+```python
+class Solution:
+    def canWinNim(self, n):
+        """
+        :type n: int
+        :rtype: bool
+        """
+        if n % 4 == 0:
+            return False
+        return True
+```
+数学很重要。
+
+### 303.区域和检索 - 数组不可变
+描述
+>给定一个整数数组  nums，求出数组从索引 i 到 j  (i ≤ j) 范围内元素的总和，包含 i,  j 两点。
+
+示例
+>给定 nums = [-2, 0, 3, -5, 2, -1]，求和函数为 sumRange()
+sumRange(0, 2) -> 1
+sumRange(2, 5) -> -1
+sumRange(0, 5) -> -3
+
+说明
+>你可以假设数组不可变。
+会多次调用 sumRange 方法。
+
+我
+```python
+class NumArray:
+
+    def __init__(self, nums):
+        """
+        :type nums: List[int]
+        """
+        self.nums = nums
+        
+
+    def sumRange(self, i, j):
+        """
+        :type i: int
+        :type j: int
+        :rtype: int
+        """
+        return sum(self.nums[i:j+1])
+        
+
+
+# Your NumArray object will be instantiated and called as such:
+# obj = NumArray(nums)
+# param_1 = obj.sumRange(i,j)
+```
+别人的
+```python
+class NumArray:
+
+    def __init__(self, nums):
+        """
+        :type nums: List[int]
+        """
+        self.__dp = [0] * len(nums)
+        sums = 0
+        for i in range(len(nums)):
+            sums += nums[i]
+            self.__dp[i] = sums
+
+
+    def sumRange(self, i, j):
+        """
+        :type i: int
+        :type j: int
+        :rtype: int
+        """
+        if (i == 0):
+            return self.__dp[j]
+        else:
+            return self.__dp[j] - self.__dp[i - 1]
+```
+_var ；变量名前一个下划线来定义，此变量为保护成员protected，只有类及其子类可以访问。此变量不能通过from XXX import xxx 导入
+__var;变量名前两个下划线来定义，此变量为私有private，只允许类本身访问，连子类都不可以访问。
+
