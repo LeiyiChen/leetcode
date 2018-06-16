@@ -4024,3 +4024,130 @@ class Solution:
         return False
 ```
 
+### 344.反转字符串
+描述
+>请编写一个函数，其功能是将输入的字符串反转过来。
+
+示例
+>输入：s = "hello"
+返回："olleh"
+
+我
+```python
+class Solution:
+    def reverseString(self, s):
+        """
+        :type s: str
+        :rtype: str
+        """
+        l = list(s)[::-1]
+        res = ''.join(l)
+        return res
+```
+这题用到之前总结的字符串与列表的互相转换。
+## 字符串与列表相互转换
+字符串转列表：
+方法1-split()
+```
+>>> s = 'a b c d'
+>>> s.split(' ')
+['a', 'b', 'c', 'd']
+```
+方法2-list()
+```
+>>> s = 'abcd'
+>>> list(s)
+['a', 'b', 'c', 'd']
+```
+方法3-eval()函数(该方法也可用于转换dict、tuple等)
+```python
+>>> s
+'[1,2,3]'
+>>> eval(s)
+[1, 2, 3]
+>>> type(eval(s))
+<class 'list'>
+```
+列表转字符串：
+string = ''.join(l) 前提是list的每个元素都为字符
+
+别人的
+```python
+    return s[::-1]
+```
+
+## 345.反转字符串中的元音字母
+描述
+>编写一个函数，以字符串作为输入，反转该字符串中的元音字母。
+
+示例
+>给定 s = "hello", 返回 "holle".
+给定 s = "leetcode", 返回 "leotcede".
+元音字母不包括 "y".
+
+思路：元音字母a,o,i,e,u。首先按序找出字符串中的元音字母，记录下索引值存放在列表index_list中，然后进行倒叙。
+我
+```python
+class Solution:
+    def reverseVowels(self, s):
+        """
+        :type s: str
+        :rtype: str
+        """
+        l = ['a','o','e','u','i','A','O','E','U','I']
+        res = list(s)
+        index_list = []
+        for i in range(len(res)):
+            if res[i] in l:
+                index_list.append(i)
+        length = len(index_list)
+        for j in range(length//2):
+            res[index_list[j]], res[index_list[-j-1]] = res[index_list[-j-1]], res[index_list[j]]
+        print(index_list)
+        return ''.join(res)
+```
+看看别人的思路
+```python
+执行用时为 68 ms 的范例
+class Solution:
+    def reverseVowels(self, s):
+        """
+        :type s: str
+        :rtype: str
+        """
+        
+        vowels = 'aeiouAEIOU'
+        
+#         tmps = []
+        
+#         res = ''
+        
+#         for i in s:
+#             if i in vowels:
+#                 tmps.append(i)
+                
+#         for i in s:
+#             if i in vowels:
+#                 res += tmps.pop()
+#             else:
+#                 res += i
+                
+#         return res
+
+        i, j = 0, len(s) - 1
+    
+        list1 = list(s)
+    
+        while i < j:
+            if s[j] not in vowels:
+                j -= 1
+            elif s[i] not in vowels:
+                i += 1
+            else:
+                list1[i], list1[j] = list1[j], list1[i]
+                i += 1
+                j -= 1
+        
+        return ''.join(list1)
+```
+使用两个指针i和j，分别从头尾便利字符串，当i，j遇到非原音字母时继续遍历，若其中一个遇到元音字母后则在原地等待另一个指针遍历都元音字母，然后两者元素进行交换。继续下一次遍历，直到两个指针相遇停止。思路很好。
