@@ -3997,5 +3997,30 @@ class Solution:
 ```python
         return n > 0 and 1162261467 % n ==0
 ```
-由于输入是int，正数范围是0-$2^31，在此范围中允许的最大的3的次方数为319=1162261467，那么我们只要看这个数能否被n整除即可。
+由于输入是int，正数范围是0-$2^31，在此范围中允许的最大的3的次方数为$3^19=1162261467，那么我们只要看这个数能否被n整除即可。
+
+### 342.4的幂
+描述
+>给定一个整数 (32位有符整数型)，请写出一个函数来检验它是否是4的幂。
+
+示例
+>当 num = 16 时 ，返回 true 。 当 num = 5时，返回 false。
+问题进阶：你能不使用循环/递归来解决这个问题吗？
+
+我
+```python
+class Solution:
+    def isPowerOfFour(self, num):
+        """
+        :type num: int
+        :rtype: bool
+        """
+        if num <= 0:
+            return False
+        while num % 4 == 0:
+            num = num // 4
+        if num == 1:
+            return True
+        return False
+```
 
