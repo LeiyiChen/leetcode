@@ -4108,7 +4108,6 @@ class Solution:
 ```
 看看别人的思路
 ```python
-执行用时为 68 ms 的范例
 class Solution:
     def reverseVowels(self, s):
         """
@@ -4151,3 +4150,160 @@ class Solution:
         return ''.join(list1)
 ```
 使用两个指针i和j，分别从头尾便利字符串，当i，j遇到非原音字母时继续遍历，若其中一个遇到元音字母后则在原地等待另一个指针遍历都元音字母，然后两者元素进行交换。继续下一次遍历，直到两个指针相遇停止。思路很好。
+还有另外一种思路：首先遍历一边字符串，将元音字母依次入栈。然后将字符串转为列表，遍历列表的时候遇到元音字母则出栈，将栈顶元素赋给当前位置。
+```python
+class Solution:
+    def reverseVowels(self, s):
+        """
+        :type s: str
+        :rtype: str
+        """
+        temp = []
+        for v in s:
+            if (v in "aeiouAEIOU"):
+                temp.append(v)
+                
+        res = ""
+        for i in range(len(s)):
+            if (s[i] in "aeiouAEIOU"):
+                res += temp.pop()
+            else:
+                res += s[i]
+                
+        return res
+```
+算上我的共三种方法，第二种效率最高，第三种次之。
+
+### 349.两个数组的交集
+描述
+>给定两个数组，写一个函数来计算它们的交集。
+
+例子
+> 给定 num1= [1, 2, 2, 1], nums2 = [2, 2], 返回 [2].
+> 
+
+提示
+>每个在结果中的元素必定是唯一的。
+我们可以不考虑输出结果的顺序。
+
+我
+```python
+class Solution:
+    def intersection(self, nums1, nums2):
+        """
+        :type nums1: List[int]
+        :type nums2: List[int]
+        :rtype: List[int]
+        """
+        l1 = len(nums1)
+        l2 = len(nums2)
+        res = set()
+        if l1 <= l2:
+            s = nums1
+            l = nums2
+        else:
+            l = nums1
+            s = nums2
+        for i in l:
+            if i in s:
+                res.add(i)
+        return list(res)
+
+```
+
+别人的
+```python
+class Solution:
+    def intersection(self, nums1, nums2):
+        """
+        :type nums1: List[int]
+        :type nums2: List[int]
+        :rtype: List[int]
+        """
+        s1, s2 = set(nums1), set(nums2)
+        return list(s1.intersection(s2))
+```
+关于Python的set有一个intersection()方法。
+```
+ intersection(...)
+ |      Return the intersection of two sets as a new set.
+ |      
+ |      (i.e. all elements that are in both sets.)
+
+```
+求交集、并集和差集
+```python
+>>> set.intersection(s,d)#获取s,d的交集
+{1}
+>>> s = {1,2,3,4,5}
+>>> d = {2,3,4,5,6}
+>>> s.intersection(d)
+{2, 3, 4, 5}
+>>> s.union(d)#并集
+{1, 2, 3, 4, 5, 6}
+>>> s.difference(d)#获取差集s-d
+{1}
+>>> d.difference(s)#获取差集d-s
+{6}
+```
+
+### 350.两个数组的交集II
+描述
+>给定两个数组，写一个方法来计算它们的交集。
+
+例如
+>给定 nums1 = [1, 2, 2, 1], nums2 = [2, 2], 返回 [2, 2].
+
+注意
+>   输出结果中每个元素出现的次数，应与元素在两个数组中出现的次数一致。
+   我们可以不考虑输出结果的顺序。
+
+跟进
+>如果给定的数组已经排好序呢？你将如何优化你的算法？
+如果 nums1 的大小比 nums2 小很多，哪种方法更优？
+如果nums2的元素存储在磁盘上，内存是有限的，你不能一次加载所有的元素到内存中，你该怎么办？
+
+思路
+这一题与前一题的区别在于不用在于交集不是集合。
+
+我
+```python
+class Solution:
+    def intersect(self, nums1, nums2):
+        """
+        :type nums1: List[int]
+        :type nums2: List[int]
+        :rtype: List[int]
+        """
+        l1 = len(nums1)
+        l2 = len(nums2)
+        res = list()
+        if l1 <= l2:
+            s = nums1
+            l = nums2
+        else:
+            l = nums1
+            s = nums2
+        for i in l:
+            if i in s:
+                res.append(i)
+                s.remove(i)
+        return res
+
+```
+
+别人的
+```python
+        res = []
+        dict = {}
+        for num in nums1:
+            if num not in dict:
+                dict[num] = 1
+            else:
+                dict[num] += 1
+        for num in nums2:
+            if num in dict and dict[num] > 0:
+                dict[num] -= 1
+                res.append(num)
+        return res
+```
