@@ -4307,3 +4307,81 @@ class Solution:
                 res.append(num)
         return res
 ```
+
+### 367.有效的完全平方数
+描述
+>给定一个正整数 num，编写一个函数，如果 num 是一个完全平方数，则返回 True，否则返回 False。
+
+注意：不要使用任何内置的库函数，如  sqrt。
+
+示例
+>输入： 16
+输出： True
+输入： 14
+输出： False
+
+我
+思路：老老实实遍历的话会超时，于是使用二分查找。
+```python
+class Solution:
+    def isPerfectSquare(self, num):
+        """
+        :type num: int
+        :rtype: bool
+        """
+        l = 1
+        h = num
+        while l <= h:
+            mid = (l+h)//2
+            t = mid**2
+            if t < num:
+                l = mid + 1
+            elif t == num:
+                return True
+            else:
+                h = mid - 1
+        return False
+```
+
+还有思路二：
+通过列举所有的完全平方数，1，4，9，16，25，36，49，64，81，100…等等，发现完全平方数的差都为奇数，即1，3，5，7，9，11，13，15…等等~所以可以判断完全平方数应该是N个奇数的和。不过没有第一种方法好。
+```python
+    i = 1
+    while num > 0:
+        num -= i
+        i += 2
+    return num == 0
+```
+
+### 633.平方数之和
+描述
+>给定一个非负整数 c ，你要判断是否存在两个整数 a 和 b，使得 a2 + b2 = c。
+
+示例
+>输入: 5
+输出: True
+解释: 1 * 1 + 2 * 2 = 5
+输入: 3
+输出: False
+
+思路：使用双指针法，最小为0，最大为输入数的平方根，判断当前两个指针是否满足要求，然后相应移动l或者h
+
+```python
+class Solution:
+    def judgeSquareSum(self, c):
+        """
+        :type c: int
+        :rtype: bool
+        """
+        l = 0
+        h = int(c**0.5)
+        while l <= h:
+            tmp = l ** 2 + h ** 2
+            if tmp < c:
+                l+=1
+            elif tmp == c:
+                return True
+            else:
+                h -= 1
+        return False
+```
