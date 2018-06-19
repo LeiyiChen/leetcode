@@ -4385,3 +4385,76 @@ class Solution:
                 h -= 1
         return False
 ```
+
+### 371.两整数之和
+描述
+>不使用运算符 + 和-，计算两整数a 、b之和。
+
+示例
+>若 a = 1 ，b = 2，返回 3。
+
+[参考1](https://www.cnblogs.com/dyzhao-blog/p/5662891.html)
+[参考2](https://blog.csdn.net/shenzhu0127/article/details/51810349)
+在不准使用+和-的情况下，我们考虑位运算。
+我们考虑位运算加法的四种情况：
+
+0 + 0 = 0
+
+1 + 0 = 1
+
+0 + 1 = 0
+
+1 + 1 = 1(with carry)
+
+在学习位运算的时候，我们知道XOR的一个重要特性是不进位加法，那么只要再找到进位，将其和XOR的结果加起来，就是最后的答案。通过观察上面的四种情况我们可以发现，只有在两个加数的值都是1的时候才会产生进位，所以我们采用&来计算进位的情况，但是注意到由于是进位，所以我们必须要将&的结果左移一位，然后再和XOR的结果相加。怎么相加呢，还是要调用getSum这个函数，这里需要再添加上递归最底层的情况，b == 0，也就是进位是0，这时候只要返回a就可以了，代码如下：
+异或运算的一个重要特性是不进位加法。
+两个数的加法计算分为两步，对应位相加和进位。我们平时计算时是将对应位相加和进位同时计算，其实可以保留下进位，只计算对应位相加，保留进位的位置（值）。接下来，将进位向左移动一位，将上一步的结果与移位后的进位值进行对应位相加，直到没有进位结束。
+
+对于二进制数的而言，对应位相加就可以使用异或（xor）操作，计算进位就可以使用与（and）操作，在下一步进行对应位相加前，对进位数使用移位操作（<<）。
+
+```python
+class Solution:
+    def getSum(self, a, b):
+        """
+        :type a: int
+        :type b: int
+        :rtype: int
+        """
+        res = a ^ b
+        carry = a & b << 1
+        while carry:
+            a = res
+            b = carry
+            res = a ^ b
+            carry = (a & b) << 1
+        return res
+```
+位运算符优先级：移位运算大于与运算。
+以上可以基本通过部分测试用例，然而并不能ac。原因是Python中该方法不可行。
+```python
+class Solution:
+    def getSum(self, a, b):
+        """
+        :type a: int
+        :type b: int
+        :rtype: int
+        """
+        #解题思路
+        """
+        利用&求进位，^异或求值
+        但是在Python中并不可行，因为Python会直接将
+        int扩展为long
+        """
+        # while b!=0:
+        #     carry=a&b
+        #     a=a^b
+        #     b=carry<<1
+        # return a
+        while b != 0:
+            carry = a & b
+            a = (a ^ b) % 0x100000000
+            b = (carry << 1) % 0x100000000
+        return a if a <= 0x7FFFFFFF else a | (~0x100000000+1)
+```
+ 因为Python的整数不是固定的32位，所以需要做一些特殊的处理，具体见[代码](https://blog.csdn.net/coder_orz/article/details/52034541)吧。
+代码里的将一个数对0x100000000取模（注意：Python的取模运算结果恒为非负数），是希望该数的二进制表示从第32位开始到更高的位都同是0（最低位是第0位），以在0-31位上模拟一个32位的int。
