@@ -4,12 +4,16 @@ class Solution:
         :type n: int
         :rtype: int
         """
-        need = [[0] * (n + 1) for _ in range(n + 1)]
-        for low in range(n, 0, -1):
-            for high in range(low + 1, n + 1):
-                need[low][high] = min(x + max(need[low][x-1], need[x+1][high]) for x in range(low, high))
-
-        return need[1][n]
+        dp = [[0] * (n + 1) for _ in range(n + 1)]
+        
+        for i in range(2, n+1):
+            for j in range(i-1, 0, -1):
+                global_min = float("inf")
+                for k in range(j, i):
+                    local_max = k + max(dp[j][k-1], dp[k+1][i])
+                    global_min = min(local_max, global_min)
+                dp[j][i] = global_min
+        return dp[1][n]
 
 
 
