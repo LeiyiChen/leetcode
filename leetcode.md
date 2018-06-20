@@ -4500,3 +4500,92 @@ class Solution(object):
             else:
                 l = mid + 1
 ```
+
+### 375.猜数字大小 II
+描述
+>我们正在玩一个猜数游戏，游戏规则如下：
+我从 1 到 n 之间选择一个数字，你来猜我选了哪个数字。
+每次你猜错了，我都会告诉你，我选的数字比你的大了或者小了。
+然而，当你猜了数字 x 并且猜错了的时候，你需要支付金额为 x 的现金。直到你猜到我选的数字，你才算赢得了这个游戏。
+
+示例
+>n = 10, 我选择了8.
+第一轮: 你猜我选择的数字是5，我会告诉你，我的数字更大一些，然后你需要支付5块。
+第二轮: 你猜是7，我告诉你，我的数字更大一些，你支付7块。
+第三轮: 你猜是9，我告诉你，我的数字更小一些，你支付9块。
+游戏结束。8 就是我选的数字。
+你最终要支付 5 + 7 + 9 = 21 块钱。
+
+给定一个 n ≥ 1，计算你至少需要拥有多少现金才能确保你能赢得这个游戏。
+
+分析：求至少拥有多少现金才能确保赢得这个游戏。也就是求最坏的情况下需要最少多少钱。动态规划。
+具体是这样的，在1-n个数里面，我们任意猜一个数(设为i)，保证获胜所花的钱应该为 i + max(w(1 ,i-1), w(i+1 ,n))，这里w(x,y))表示猜范围在(x,y)的数保证能赢应花的钱，则我们依次遍历 1-n作为猜的数，求出其中的最小值即为答案，即最小的最大值问题。
+参考https://www.cnblogs.com/zichi/p/5701194.html
+没找到python相关的思路，于是照着javascript代码写了一遍，结果超时。
+```python
+class Solution:
+    def getMoneyAmount(self, n):
+        """
+        :type n: int
+        :rtype: int
+        """
+        def DP(ans, start , end):
+            if start >= end:
+                return 0
+            elif ans[start][end]:
+                return ans[start][end]
+            ans[start][end] = float("inf")
+            for i in range(start, end):
+                left = DP(ans,start,i-1)
+                right = DP(ans,i+1,end)
+                tmp = i + max(left,right)
+                ans[start][end] = min(ans[start][end],tmp)
+            return ans[start][end]
+        ans = [[0]*(n+1) for i in range(n)]
+        return DP(ans,1,n)
+```
+这里需要注意的是python一个用法
+float("inf")#正无穷，比任何一个数大
+float("-inf")#负无穷，比任何一个数小
+其中inf乘以0 得到nan
+nan（not a number），指在数学上一个无法表示的数。它无法用==进行判断
+```python
+>>> c = float("inf")
+>>> c
+inf
+>>> c*0
+nan
+>>> nan = float("nan")
+>>> nan == nan
+False
+>>> nan is nan
+True
+```
+将递归改为递推。
+版本1
+```python
+class Solution:
+    def getMoneyAmount(self, n):
+        """
+        :type n: int
+        :rtype: int
+        """
+        need = [[0] * (n + 1) for _ in range(n + 1)]
+        for low in range(n, 0, -1):
+            for high in range(low + 1, n + 1):
+                need[low][high] = min(x + max(need[low][x-1], need[x+1][high]) for x in range(low, high))
+
+        return need[1][n]
+```
+版本2
+```python
+        dp = [[0] * (n + 1) for _ in range(n + 1)] 
+        for i in range(2, n+1):
+            for j in range(i-1, 0, -1):
+                global_min = float("inf")
+                for k in range(j, i):
+                    local_max = k + max(dp[j][k-1], dp[k+1][i])
+                    global_min = min(local_max, global_min)
+                dp[j][i] = global_min
+        return dp[1][n]
+```
