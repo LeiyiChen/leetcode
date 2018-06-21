@@ -4589,3 +4589,66 @@ class Solution:
                 dp[j][i] = global_min
         return dp[1][n]
 ```
+
+### 414.第三大的数
+描述
+>给定一个非空数组，返回此数组中第三大的数。如果不存在，则返回数组中最大的数。要求算法时间复杂度必须是O(n)。
+
+示例
+>输入: [3, 2, 1]
+输出: 1
+解释: 第三大的数是 1.
+
+输入: [1, 2]
+输出: 2
+解释: 第三大的数不存在, 所以返回最大的数 2 .
+
+输入: [2, 2, 3, 1]
+输出: 1
+解释: 注意，要求返回第三大的数，是指第三大且唯一出现的数。
+存在两个值为2的数，它们都排第二。
+
+我
+```python
+        d = {}
+        for i in nums:
+            if i in d:
+                d[i] += 1
+            else:
+                d[i] = 0
+        l = sorted(list(d.keys()))
+        if len(l) < 3:
+            return max(l)
+        return l[-3]
+```
+但是说实话并不满足题目中时间复杂度的要求。这题中如果有重复的元素的话只算一个。因此可以用集合来去除多余的元素。如下面这个版本，但也不满足题目的要求。
+```python
+class Solution:
+    def thirdMax(self, nums):
+        """
+        :type nums: List[int]
+        :rtype: int
+        """
+        A = sorted(list(set(nums)))
+        if len(A) < 3:
+            return max(A)
+        else:
+            A.reverse()
+            return A[2]
+```
+下面这个版本是正经的版本。（这三个版本都可通过）
+```python
+        res = [float("-inf")] * 3
+        for i in nums:
+            if i in res:
+                continue
+            if i > res[0]:
+                res = [i,res[0],res[1]]
+            elif i > res[1]:
+                res = [res[0],i,res[1]]
+            elif i > res[2]:
+                res = [res[0],res[1],i]
+            print(res)
+        return res[-1] if res[2] != float("-inf") else res[0]
+```
+维持一个依次减小的数组res，保证每次遍历数组中的三个数都是最大的三个。
