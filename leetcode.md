@@ -4672,6 +4672,12 @@ class Solution:
 每一个 cost[i] 将会是一个Integer类型，范围为 [0, 999]。
 
 思路：动态规划。求到达每一阶的最小成本。倒数第一和倒数第二的最小值即为解。
+我是这么考虑的：把问题缩小，只有两种办法到达第i阶，一种是i-2阶走两步到达，一种是i-1阶走一步到达。题目中说出发点可以任选cost[0]或cost[1]，这里可能稍微有些干扰，会误以为要按照两个初始点分别计算。比如到达cost[2]的方法：
+- cost[1]走一步
+- cost[0]走两步
+- cost[0]走两个一步
+其实说出来就明白了，cost[0]如果选择走两个一步到达cost[2]，那么这在cost[1]走一步到达cost[2]的基础上还要增加花费，完全没有必要考虑上述第三种情况。因此只有两种方法到达某一台阶i.因此到达台阶i的花费即为两种方法中代价最小的。表示为：cost[i] = min(cost[i-2]+cost[i],cost[i-1]+cost[i]).
+动态规划核心就是找到最优子结构，然后自上而下或者自底向上求解问题。如果对时间复杂度有要求的话，最好选择递推，相对递归来说效率高。
 ```python
 class Solution:
     def minCostClimbingStairs(self, cost):
@@ -4685,4 +4691,53 @@ class Solution:
         for i in range(2,len(cost)):
             dp[i] = min(dp[i-2]+cost[i],dp[i-1]+cost[i])
         return min(dp[len(cost)-1],dp[len(cost)-2])
+```
+
+### 56.合并区间
+描述
+>给出一个区间的集合，请合并所有重叠的区间。
+
+示例
+>输入: [[1,3],[2,6],[8,10],[15,18]]
+输出: [[1,6],[8,10],[15,18]]
+解释: 区间 [1,3] 和 [2,6] 重叠, 将它们合并为 [1,6].
+输入: [[1,4],[4,5]]
+输出: [[1,5]]
+解释: 区间 [1,4] 和 [4,5] 可被视为重叠区间。
+
+不愧是中等难度，耗费好长时间来研究透彻。
+思路：
+1.将intervals按每一个元素的start进行升序排列。
+2.此时后一个值的start一定在前一个值的start后(或相等)。这个时候只要判断后一个的start是否比前一个的end大。这里我设置了两个指针l和h来表示区间的起始值和终点，列表res作为结果。判断： 
+如果 intervals[i].start <= intervals[i-1].end, 那么l保持不变，h为max(intervals[i].end, intervals[i-1].end)。否则，往列表res添加[l,h]，更新l和h的值。接下来继续循环判断。
+3.循环结束再往res添加[l,h]。
+
+```python
+# Definition for an interval.
+# class Interval:
+#     def __init__(self, s=0, e=0):
+#         self.start = s
+#         self.end = e
+
+class Solution:
+    def merge(self, intervals):
+        """
+        :type intervals: List[Interval]
+        :rtype: List[Interval]
+        """
+        if len(intervals) <= 1:
+            return intervals
+        res = []
+        intervals = sorted(intervals,key = lambda start: start.start)
+        l = intervals[0].start
+        h = intervals[0].end
+        for i in range(1,len(intervals)):
+            if intervals[i].start <= h:
+                h = max(h,intervals[i].end)
+            else:
+                res.append([l,h])
+                l = intervals[i].start
+                h = intervals[i].end
+        res.append([l,h])
+        return res
 ```
