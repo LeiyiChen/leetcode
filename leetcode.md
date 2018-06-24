@@ -4712,6 +4712,9 @@ class Solution:
 如果 intervals[i].start <= intervals[i-1].end, 那么l保持不变，h为max(intervals[i].end, intervals[i-1].end)。否则，往列表res添加[l,h]，更新l和h的值。接下来继续循环判断。
 3.循环结束再往res添加[l,h]。
 
+整理得有点乱：可以参考
+http://baijiahao.baidu.com/s?id=1601850694267158066&wfr=spider&for=pc
+
 ```python
 # Definition for an interval.
 # class Interval:
@@ -4739,5 +4742,51 @@ class Solution:
                 l = intervals[i].start
                 h = intervals[i].end
         res.append([l,h])
+        return res
+```
+
+### 57.插入区间
+描述
+>给出一个无重叠的 ，按照区间起始端点排序的区间列表。
+在列表中插入一个新的区间，你需要确保列表中的区间仍然有序且不重叠（如果有必要的话，可以合并区间）。
+
+示例
+>输入: intervals = [[1,3],[6,9]], newInterval = [2,5]
+输出: [[1,5],[6,9]]
+输入: intervals = [[1,2],[3,5],[6,7],[8,10],[12,16]], newInterval = [4,8]
+输出: [[1,2],[3,10],[12,16]]
+解释: 这是因为新的区间 [4,8] 与 [3,5],[6,7],[8,10] 重叠。
+
+思路:按照上一题56的代码基础上做了一点小修改。
+1）插入新的区间；
+2）合并重复区间，即56的做法。
+```python
+# Definition for an interval.
+# class Interval:
+#     def __init__(self, s=0, e=0):
+#         self.start = s
+#         self.end = e
+
+class Solution:
+    def insert(self, intervals, newInterval):
+        """
+        :type intervals: List[Interval]
+        :type newInterval: Interval
+        :rtype: List[Interval]
+        """
+        intervals.append(newInterval)
+        l = len(intervals)
+        res = []
+        intervals = sorted(intervals, key = lambda intervals:intervals.start)
+        low = intervals[0].start
+        high = intervals[0].end
+        for i in range(1, l):
+            if intervals[i].start <= high:
+                high = max(high, intervals[i].end)
+            else:
+                res.append([low, high])
+                low = intervals[i].start
+                high = intervals[i].end
+        res.append([low, high])
         return res
 ```
