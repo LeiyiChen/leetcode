@@ -4790,3 +4790,54 @@ class Solution:
         res.append([low, high])
         return res
 ```
+
+### 75.分类颜色
+描述
+>给定一个包含红色、白色和蓝色，一共 n 个元素的数组，原地对它们进行排序，使得相同颜色的元素相邻，并按照红色、白色、蓝色顺序排列。
+此题中，我们使用整数 0、 1 和 2 分别表示红色、白色和蓝色。
+
+注意
+不能使用代码库中的排序函数来解决这道题。
+
+示例
+>输入: [2,0,2,1,1,0]
+输出: [0,0,1,1,2,2]
+
+进阶
+>一个直观的解决方案是使用计数排序的两趟扫描算法。
+首先，迭代计算出0、1 和 2 元素的个数，然后按照0、1、2的排序，重写当前数组。
+你能想出一个仅使用常数空间的一趟扫描算法吗？
+
+思路:
+1）首先找出数组中的最小值的索引，然后将最小值与第一个元素交换位置。
+2）设置三个变量，一个是j表示当前指针，l表示当前还需遍历的长度，k表示k之前的所有元素都为0.从第一个元素开始循环遍历，遇到2，则pop(j),然后在尾部插入2，l--，遇到0则与索引值为k的元素交换。
+保证2永远在尾部，0永远在头部，1无需任何操作。
+
+这个思路之前有用到过，但是忘记是哪个题了。。。
+```python
+class Solution:
+    def sortColors(self, nums):
+        """
+        :type nums: List[int]
+        :rtype: void Do not return anything, modify nums in-place instead.
+        """
+        l = len(nums)
+        index = 0
+        for i in range(1, l):
+            if nums[i] < nums[index]:
+                index = i
+        nums[0], nums[index] = nums[index], nums[0]
+        k = j = 1
+        while j < l:
+            if nums[j] == 2:
+                nums.pop(j)
+                nums.append(2)
+                l -= 1
+            elif nums[j] == 0:
+                nums[k], nums[j] = nums[j], nums[k]
+                k += 1
+                j += 1
+            else:
+                j += 1
+        return nums
+```
