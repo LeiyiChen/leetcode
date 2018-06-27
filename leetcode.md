@@ -4859,7 +4859,60 @@ class Solution:
 输入: -1->5->3->4->0
 输出: -1->0->3->4->5
 
-思路
+思路：设置一个新的链表。遍历旧链表，每一个节点都作为一个新节点，按序插入新链表中。
 ```python
-
+        new_s = ListNode(None)
+        new_s.next = ListNode(head.val)
+        cur = head.next
+        while cur:
+            insert_node = ListNode(cur.val)
+            new_cur = new_s.next
+            pre = new_s
+            while new_cur:
+                if new_cur.val >= insert_node.val:
+                    insert_node.next = new_cur
+                    pre.next = insert_node
+                    break
+                elif new_cur.next is None:
+                    new_cur.next = insert_node
+                    break
+                pre = new_cur
+                new_cur = new_cur.next
+            cur = cur.next
+        return new_s.next
+```
+超时。
+修改
+```python
+        p = new_s = ListNode(None)
+        new_s.next = head
+        cur = head
+        while cur and cur.next:
+            val = cur.next.val
+            if val > cur.val:
+                cur = cur.next
+                continue
+            if p.next.val > val:
+                p = new_s
+            while p.next.val < val:
+                p = p.next
+            new = cur.next
+            cur.next = new.next
+            new.next = p.next
+            p.next = new
+        return new_s.next
+```
+还有一种走捷径的方法，那就是遍历一次链表，将所有节点的值拿出来进行排序，然后再根据排序后的结果生成一个新链表。
+```python
+        h = head
+        res = []
+        while h:
+            res.append(h.val)
+            h = h.next
+        res.sort()
+        h = head
+        for i in res:
+            h.val = i
+            h = h.next
+        return head
 ```
