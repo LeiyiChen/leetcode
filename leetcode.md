@@ -4916,3 +4916,72 @@ class Solution:
             h = h.next
         return head
 ```
+### 148.排序链表
+描述
+>在 O(n log n) 时间复杂度和常数级空间复杂度下，对链表进行排序。
+
+示例
+>
+输入: 4->2->1->3
+输出: 1->2->3->4
+
+输入: -1->5->3->4->0
+输出: -1->0->3->4->5
+
+思路:
+这就需要分析一下各个排序算法的复杂度了。
+
+
+### 524.通过删除字母匹配到字典里最长单词
+描述
+>给定一个字符串和一个字符串字典，找到字典里面最长的字符串，该字符串可以通过删除给定字符串的某些字符来得到。如果答案不止一个，返回长度最长且字典顺序最小的字符串。如果答案不存在，则返回空字符串。
+
+示例
+>输入:
+s = "abpcplea", d = ["ale","apple","monkey","plea"]
+输出: 
+"apple"
+
+输入:
+s = "abpcplea", d = ["a","b","c"]
+输出: 
+"a"
+
+说明
+所有输入的字符串只包含小写字母。
+字典的大小不会超过 1000。
+所有输入的字符串长度不会超过 1000。
+
+皇天不负有心人，大半夜断网连流量硬暴力破解通过了。
+```python
+class Solution:
+    def findLongestWord(self, s, d):
+        """
+        :type s: str
+        :type d: List[str]
+        :rtype: str
+        """
+        d.reverse()
+        res = []
+        maxlen = 0
+        flag = 0
+        d = sorted(d, key = lambda x :len(x))
+        for item in d[::-1]:
+            if flag == 1 and len(item) < maxlen:
+                break
+            i = j = 0
+            while i < len(item) and j < len(s):
+                if item[i] == s[j]:
+                    i += 1
+                j += 1
+            if i == len(item):
+                flag = 1
+                maxlen = len(item)
+                res.append(item)
+        if res == []:
+            return ""
+        elif len(res) == 1:
+            return res[0]
+        res.sort()
+        return res[0]
+```
