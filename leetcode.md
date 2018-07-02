@@ -4953,6 +4953,10 @@ s = "abpcplea", d = ["a","b","c"]
 所有输入的字符串长度不会超过 1000。
 
 皇天不负有心人，大半夜断网连流量硬暴力破解通过了。
+这道题的麻烦之处在于如果答案有多个，则返回长度最长且字典顺序最小的字母。我是这么处理的：
+1）先把d中的元素按长度排序；
+2）将满足条件的且最长的字符串存在res中。引入flag变量和maxlen变量，来判断是否应该存入res中。
+3）如果len(res)为1，则输出。如果>1，则再将res进行排序，输出res[0].
 ```python
 class Solution:
     def findLongestWord(self, s, d):
@@ -4984,4 +4988,39 @@ class Solution:
             return res[0]
         res.sort()
         return res[0]
+```
+但是其实sort()函数的key可以有多个变量依次排序。比如
+d = sorted(d, key=lambda x: (-len(x), x)),先按长度逆序排列，然后相同长度的再按字母顺序排序，一步到位。
+```python
+        d.sort(key=lambda x:(-len(x), x))
+        def isSubseq(word, s):
+            i = 0
+            for c in s:
+                if c == word[i]:
+                    i += 1
+                if i == len(word):
+                    return True
+            return False
+        for word in d:
+            if isSubseq(word, s):
+                return word
+        return ""
+```
+### 767.重构字符串
+描述
+>给定一个字符串S，检查是否能重新排布其中的字母，使得两相邻的字符不同。
+若可行，输出任意可行的结果。若不可行，返回空字符串。
+
+示例
+>输入: S = "aab"
+输出: "aba"
+输入: S = "aaab"
+输出: ""
+
+注意：
+S 只包含小写字母并且长度在[1, 500]区间内。
+
+思路：使用贪心和大顶堆！又是新的东西！
+```python
+
 ```
