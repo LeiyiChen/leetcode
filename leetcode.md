@@ -4929,7 +4929,58 @@ class Solution:
 输出: -1->0->3->4->5
 
 思路:
-这就需要分析一下各个排序算法的复杂度了。
+这就需要分析一下各个排序算法的复杂度了。时间复杂度在O(nlogN)的排序算法是快速排序，堆排序，归并排序。但是快排的最坏时间复杂度是O(n^2),平均时间复杂度为O(nlogn)，所以不考虑快速排序。而堆排序太繁琐了。。。。。emmm。。。生硬地排除了。对于数组来说占用的空间复杂度为O(1),O(n),O(n)。但是对于链表来说使用归并排序占用空间为O(1).
+
+```python
+# Definition for singly-linked list.
+# class ListNode:
+#     def __init__(self, x):
+#         self.val = x
+#         self.next = None
+
+class Solution:
+    def sortList(self, head):
+        """
+        :type head: ListNode
+        :rtype: ListNode
+        """
+        if head is None or head.next is None:
+            return head
+        mid = self.get_mid(head)
+        l = head
+        r = mid.next
+        mid.next = None
+        return self.merge(self.sortList(l), self.sortList(r))
+
+    def merge(self, p, q):
+            tmp = ListNode(0)
+            h = tmp
+            while p and q:
+                if p.val < q.val:
+                    h.next = p
+                    p = p.next
+                else:
+                    h.next = q
+                    q = q.next
+                h = h.next
+            if p:
+                h.next = p
+            if q:
+                h.next = q
+            return tmp.next
+
+    def get_mid(self, node):
+        if node is None:
+            return node
+        fast = slow = node
+        while fast.next and fast.next.next:
+            slow = slow.next
+            fast = fast.next.next
+        return slow
+```
+这题前前后后拖了两周了吧，因为各种乱七八糟的事。这一题反复看了好多版本的代码，难点在与链表的操作，比如使用快慢指针找到链表中点，需要对中点前一个链表进行割断处理。合并两个有序链表，引入一个新的变量来存储合并结果。
+分解子问题，解决子问题，合并问题的解。
+
 
 
 ### 524.通过删除字母匹配到字典里最长单词
