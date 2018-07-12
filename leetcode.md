@@ -5057,6 +5057,57 @@ d = sorted(d, key=lambda x: (-len(x), x)),先按长度逆序排列，然后相�
                 return word
         return ""
 ```
+### 501.二叉搜索树中的众数
+描述
+
+[![](https://i.loli.net/2018/07/12/5b4773e656b3b.png)](https://i.loli.net/2018/07/12/5b4773e656b3b.png)
+
+思路：中序遍历树（其实怎么遍历都可以）定义一个字典存储每个数出现的次数。然后再对字典排序。
+
+```python
+# Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, x):
+#         self.val = x
+#         self.left = None
+#         self.right = None
+
+class Solution:
+    def findMode(self, root):
+        """
+        :type root: TreeNode
+        :rtype: List[int]
+        """
+        if root is None:
+            return []
+        d = {}
+
+        def helper(root, d):
+            if root is None:
+                return
+            helper(root.left, d)
+            if root.val in d:
+                d[root.val] += 1
+            else:
+                d[root.val] = 1
+            helper(root.right, d)
+
+        helper(root, d)
+        l = list(d.items())
+        l = sorted(l, key=lambda x: x[1], reverse=True)
+        res = [l[0][0]]
+        for i in range(1, len(l)):
+            if l[i][1] == l[0][1]:
+                res.append(l[i][0])
+            else:
+                break
+        return res
+```
+刷了一段时间的中等难度被虐得不行。。。又回来刷简单难度。。。
+想到一个方法，中序遍历树，然后增加一个变量tmp保存当前遍历的数及这个数出现的次数。还有一个最大次数及对应数值。
+sort函数与sorted的区别！！！
+
+
 ### 767.重构字符串
 描述
 >给定一个字符串S，检查是否能重新排布其中的字母，使得两相邻的字符不同。
