@@ -5106,6 +5106,61 @@ class Solution:
 刷了一段时间的中等难度被虐得不行。。。又回来刷简单难度。。。
 想到一个方法，中序遍历树，然后增加一个变量tmp保存当前遍历的数及这个数出现的次数。还有一个最大次数及对应数值。
 sort函数与sorted的区别！！！
+1)内建方法sort()
+用法：
+list.sort(func=None,key = None, reverse = False(default))
+
+- reverse默认为False，顺序排列。为True时逆序排列
+- 执行完以后更改list，返回None
+- 仅列表使用
+2)内建函数sorted() 
+
+- sorted()可用于任何一个可迭代的对象
+- sorted()不会改变原来的list，而是会返回一个新的已经排好序的list
+
+### 102.二叉树的层次遍历
+描述
+>![](https://i.loli.net/2018/07/15/5b4b5289a05bd.png)
+
+思路：层次遍历。定义两个列表，存储当前层的结点和下一层的结点。
+```python
+# Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, x):
+#         self.val = x
+#         self.left = None
+#         self.right = None
+
+class Solution:
+    def levelOrder(self, root):
+        """
+        :type root: TreeNode
+        :rtype: List[List[int]]
+        """
+        if root is None:
+            return []
+        current = [root]
+        res = []
+        nxt = []
+        tmp_val = []
+        while len(current) > 0:
+            tmp = current.pop(0)
+            tmp_val.append(tmp.val)
+            if tmp.left is not None:
+                nxt.append(tmp.left)
+            if tmp.right is not None:
+                nxt.append(tmp.right)
+            if len(current) == 0:
+                if nxt == []:
+                    if tmp_val:
+                        res.append(tmp_val)
+                    return res
+                else:
+                    current = nxt
+                    nxt = []
+                res.append(tmp_val)
+                tmp_val = []
+```
 
 
 ### 767.重构字符串
