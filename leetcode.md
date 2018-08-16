@@ -3127,6 +3127,7 @@ class Solution:
         return False
 ```
 
+
 ### 225.用队列实现栈
 描述
 >使用队列实现栈的下列操作：
@@ -3192,6 +3193,70 @@ class MyStack:
             return True
         else:
             return False
+```
+***
+### 8.16更新，用两个队列实现栈。
+***
+思路：类似[两个栈实现队列](https://blog.csdn.net/qq_34364995/article/details/81135688)。queue1用来存放数据，每次入栈就插入queue1索引值为0的地方。queue2为出栈时的辅助队列，将queue1[1:-1]的元素出队然后入队queue2(也就是queue1逆序压入queue2)，然后queue1仅剩队首元素，这个时候出队即出栈。
+```python
+class MyStack(object):
+    def __init__(self):
+        """
+        Initialize your data structure here.
+        """
+        self.queue1 = []
+        self.queue2 = []
+
+    def push(self, x):
+        """
+        Push element x onto stack.
+        :type x: int
+        :rtype: void
+        """
+        self.queue1.insert(0, x)
+
+    def pop(self):
+        """
+        Removes the element on top of the stack and returns that element.
+        :rtype: int
+        """
+        for _ in range(len(self.queue1) - 1):
+            self.queue2.insert(0, self.queue1.pop())
+        res = self.queue1.pop()
+        self.queue1 = self.queue2
+        self.queue2 = []
+        return res
+
+    def top(self):
+        """
+        Get the top element.
+        :rtype: int
+        """
+        self.queue2 = self.queue1[:]
+        for i in range(len(self.queue1) - 1):
+            self.queue1.pop()
+        res = self.queue1[-1]
+        self.queue1 = self.queue2
+        self.queue2 = []
+        return res
+
+    def empty(self):
+        """
+        Returns whether the stack is empty.
+        :rtype: bool
+        """
+        if len(self.queue1) == 0:
+            return True
+        return False
+        
+
+
+# Your MyStack object will be instantiated and called as such:
+# obj = MyStack()
+# obj.push(x)
+# param_2 = obj.pop()
+# param_3 = obj.top()
+# param_4 = obj.empty()
 ```
 
 ### 226.翻转二叉树
